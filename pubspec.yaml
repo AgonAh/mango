@@ -1,0 +1,51 @@
+name: mango
+description: "A minimal, dark-mode, Android-first manga reader."
+publish_to: 'none'
+version: 0.1.1
+
+environment:
+  sdk: ^3.9.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # State management
+  flutter_riverpod: ^3.1.0
+  riverpod_annotation: ^4.0.0
+
+  # Local database
+  drift: ^2.20.0
+  sqlite3_flutter_libs: ^0.5.24
+  path_provider: ^2.1.4
+  path: ^1.9.0
+
+  # Networking & images
+  dio: ^5.7.0
+  cached_network_image: ^3.4.1
+  flutter_cache_manager: ^3.4.1
+  photo_view: ^0.15.0
+
+  # Models & serialization
+  freezed_annotation: ^3.1.0
+  json_annotation: ^4.9.0
+
+  # Utilities
+  collection: ^1.18.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+  # Code generation
+  build_runner: ^2.4.13
+  riverpod_generator: ^4.0.0+1
+  drift_dev: ^2.20.0
+  freezed: ^3.2.3
+  json_serializable: ^6.8.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/reference.json

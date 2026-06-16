@@ -1,0 +1,55 @@
+[
+  {
+    "title": "Hokusai",
+    "identifier": "hokusai-manga",
+    "thumbnail": "https://ia600802.us.archive.org/BookReader/BookReaderImages.php?zip=/9/items/hokusaimangav4kats/hokusaimangav4kats_jp2.zip&file=hokusaimangav4kats_jp2/hokusaimangav4kats_0001.jp2&id=hokusaimangav4kats&scale=4&rotate=0",
+    "chapters": [
+      {
+        "id": "1",
+        "order": 1,
+        "pages": [
+          "https://ia600802.us.archive.org/BookReader/BookReaderImages.php?zip=/9/items/hokusaimangav4kats/hokusaimangav4kats_jp2.zip&file=hokusaimangav4kats_jp2/hokusaimangav4kats_0001.jp2&id=hokusaimangav4kats&scale=4&rotate=0",
+          "https://ia600802.us.archive.org/BookReader/BookReaderImages.php?zip=/9/items/hokusaimangav4kats/hokusaimangav4kats_jp2.zip&file=hokusaimangav4kats_jp2/hokusaimangav4kats_0002.jp2&id=hokusaimangav4kats&scale=4&rotate=0",
+          "https://ia600802.us.archive.org/BookReader/BookReaderImages.php?zip=/9/items/hokusaimangav4kats/hokusaimangav4kats_jp2.zip&file=hokusaimangav4kats_jp2/hokusaimangav4kats_0003.jp2&id=hokusaimangav4kats&scale=4&rotate=0",
+          "https://ia600802.us.archive.org/BookReader/BookReaderImages.php?zip=/9/items/hokusaimangav4kats/hokusaimangav4kats_jp2.zip&file=hokusaimangav4kats_jp2/hokusaimangav4kats_0004.jp2&id=hokusaimangav4kats&scale=4&rotate=0",
+          "https://ia600802.us.archive.org/BookReader/BookReaderImages.php?zip=/9/items/hokusaimangav4kats/hokusaimangav4kats_jp2.zip&file=hokusaimangav4kats_jp2/hokusaimangav4kats_0005.jp2&id=hokusaimangav4kats&scale=4&rotate=0",
+          "https://ia600802.us.archive.org/BookReader/BookReaderImages.php?zip=/9/items/hokusaimangav4kats/hokusaimangav4kats_jp2.zip&file=hokusaimangav4kats_jp2/hokusaimangav4kats_0006.jp2&id=hokusaimangav4kats&scale=4&rotate=0",
+          "https://ia600802.us.archive.org/BookReader/BookReaderImages.php?zip=/9/items/hokusaimangav4kats/hokusaimangav4kats_jp2.zip&file=hokusaimangav4kats_jp2/hokusaimangav4kats_0007.jp2&id=hokusaimangav4kats&scale=4&rotate=0",
+          "https://ia600802.us.archive.org/BookReader/BookReaderImages.php?zip=/9/items/hokusaimangav4kats/hokusaimangav4kats_jp2.zip&file=hokusaimangav4kats_jp2/hokusaimangav4kats_0008.jp2&id=hokusaimangav4kats&scale=4&rotate=0",
+          "https://ia600802.us.archive.org/BookReader/BookReaderImages.php?zip=/9/items/hokusaimangav4kats/hokusaimangav4kats_jp2.zip&file=hokusaimangav4kats_jp2/hokusaimangav4kats_0009.jp2&id=hokusaimangav4kats&scale=4&rotate=0",
+          "https://ia600802.us.archive.org/BookReader/BookReaderImages.php?zip=/9/items/hokusaimangav4kats/hokusaimangav4kats_jp2.zip&file=hokusaimangav4kats_jp2/hokusaimangav4kats_0010.jp2&id=hokusaimangav4kats&scale=4&rotate=0",
+          "https://ia600802.us.archive.org/BookReader/BookReaderImages.php?zip=/9/items/hokusaimangav4kats/hokusaimangav4kats_jp2.zip&file=hokusaimangav4kats_jp2/hokusaimangav4kats_0011.jp2&id=hokusaimangav4kats&scale=4&rotate=0",
+          "https://ia600802.us.archive.org/BookReader/BookReaderImages.php?zip=/9/items/hokusaimangav4kats/hokusaimangav4kats_jp2.zip&file=hokusaimangav4kats_jp2/hokusaimangav4kats_0012.jp2&id=hokusaimangav4kats&scale=4&rotate=0",
+          "https://ia600802.us.archive.org/BookReader/BookReaderImages.php?zip=/9/items/hokusaimangav4kats/hokusaimangav4kats_jp2.zip&file=hokusaimangav4kats_jp2/hokusaimangav4kats_0013.jp2&id=hokusaimangav4kats&scale=4&rotate=0",
+          "https://ia600802.us.archive.org/BookReader/BookReaderImages.php?zip=/9/items/hokusaimangav4kats/hokusaimangav4kats_jp2.zip&file=hokusaimangav4kats_jp2/hokusaimangav4kats_0014.jp2&id=hokusaimangav4kats&scale=4&rotate=0",
+          "https://ia600802.us.archive.org/BookReader/BookReaderImages.php?zip=/9/items/hokusaimangav4kats/hokusaimangav4kats_jp2.zip&file=hokusaimangav4kats_jp2/hokusaimangav4kats_0015.jp2&id=hokusaimangav4kats&scale=4&rotate=0",
+          "https://ia600802.us.archive.org/BookReader/BookReaderImages.php?zip=/9/items/hokusaimangav4kats/hokusaimangav4kats_jp2.zip&file=hokusaimangav4kats_jp2/hokusaimangav4kats_0016.jp2&id=hokusaimangav4kats&scale=4&rotate=0",
+          
+        ]
+    },
+    {
+        "id": "2",
+        "order": 2,
+        "pages": [
+            "https://ia600802.us.archive.org/BookReader/BookReaderImages.php?zip=/9/items/hokusaimangav4kats/hokusaimangav4kats_jp2.zip&file=hokusaimangav4kats_jp2/hokusaimangav4kats_0017.jp2&id=hokusaimangav4kats&scale=4&rotate=0",
+            "https://ia600802.us.archive.org/BookReader/BookReaderImages.php?zip=/9/items/hokusaimangav4kats/hokusaimangav4kats_jp2.zip&file=hokusaimangav4kats_jp2/hokusaimangav4kats_0018.jp2&id=hokusaimangav4kats&scale=4&rotate=0",
+            "https://ia600802.us.archive.org/BookReader/BookReaderImages.php?zip=/9/items/hokusaimangav4kats/hokusaimangav4kats_jp2.zip&file=hokusaimangav4kats_jp2/hokusaimangav4kats_0019.jp2&id=hokusaimangav4kats&scale=4&rotate=0",
+            "https://ia600802.us.archive.org/BookReader/BookReaderImages.php?zip=/9/items/hokusaimangav4kats/hokusaimangav4kats_jp2.zip&file=hokusaimangav4kats_jp2/hokusaimangav4kats_0020.jp2&id=hokusaimangav4kats&scale=4&rotate=0",
+            "https://ia600802.us.archive.org/BookReader/BookReaderImages.php?zip=/9/items/hokusaimangav4kats/hokusaimangav4kats_jp2.zip&file=hokusaimangav4kats_jp2/hokusaimangav4kats_0021.jp2&id=hokusaimangav4kats&scale=4&rotate=0",
+            "https://ia600802.us.archive.org/BookReader/BookReaderImages.php?zip=/9/items/hokusaimangav4kats/hokusaimangav4kats_jp2.zip&file=hokusaimangav4kats_jp2/hokusaimangav4kats_0022.jp2&id=hokusaimangav4kats&scale=4&rotate=0",
+            "https://ia600802.us.archive.org/BookReader/BookReaderImages.php?zip=/9/items/hokusaimangav4kats/hokusaimangav4kats_jp2.zip&file=hokusaimangav4kats_jp2/hokusaimangav4kats_0023.jp2&id=hokusaimangav4kats&scale=4&rotate=0",
+            "https://ia600802.us.archive.org/BookReader/BookReaderImages.php?zip=/9/items/hokusaimangav4kats/hokusaimangav4kats_jp2.zip&file=hokusaimangav4kats_jp2/hokusaimangav4kats_0024.jp2&id=hokusaimangav4kats&scale=4&rotate=0",
+            "https://ia600802.us.archive.org/BookReader/BookReaderImages.php?zip=/9/items/hokusaimangav4kats/hokusaimangav4kats_jp2.zip&file=hokusaimangav4kats_jp2/hokusaimangav4kats_0025.jp2&id=hokusaimangav4kats&scale=4&rotate=0",
+            "https://ia600802.us.archive.org/BookReader/BookReaderImages.php?zip=/9/items/hokusaimangav4kats/hokusaimangav4kats_jp2.zip&file=hokusaimangav4kats_jp2/hokusaimangav4kats_0026.jp2&id=hokusaimangav4kats&scale=4&rotate=0",
+            "https://ia600802.us.archive.org/BookReader/BookReaderImages.php?zip=/9/items/hokusaimangav4kats/hokusaimangav4kats_jp2.zip&file=hokusaimangav4kats_jp2/hokusaimangav4kats_0027.jp2&id=hokusaimangav4kats&scale=4&rotate=0",
+            "https://ia600802.us.archive.org/BookReader/BookReaderImages.php?zip=/9/items/hokusaimangav4kats/hokusaimangav4kats_jp2.zip&file=hokusaimangav4kats_jp2/hokusaimangav4kats_0028.jp2&id=hokusaimangav4kats&scale=4&rotate=0",
+            "https://ia600802.us.archive.org/BookReader/BookReaderImages.php?zip=/9/items/hokusaimangav4kats/hokusaimangav4kats_jp2.zip&file=hokusaimangav4kats_jp2/hokusaimangav4kats_0029.jp2&id=hokusaimangav4kats&scale=4&rotate=0",
+            "https://ia600802.us.archive.org/BookReader/BookReaderImages.php?zip=/9/items/hokusaimangav4kats/hokusaimangav4kats_jp2.zip&file=hokusaimangav4kats_jp2/hokusaimangav4kats_0030.jp2&id=hokusaimangav4kats&scale=4&rotate=0",
+            "https://ia600802.us.archive.org/BookReader/BookReaderImages.php?zip=/9/items/hokusaimangav4kats/hokusaimangav4kats_jp2.zip&file=hokusaimangav4kats_jp2/hokusaimangav4kats_0031.jp2&id=hokusaimangav4kats&scale=4&rotate=0",
+            "https://ia600802.us.archive.org/BookReader/BookReaderImages.php?zip=/9/items/hokusaimangav4kats/hokusaimangav4kats_jp2.zip&file=hokusaimangav4kats_jp2/hokusaimangav4kats_0032.jp2&id=hokusaimangav4kats&scale=4&rotate=0",
+            "https://ia600802.us.archive.org/BookReader/BookReaderImages.php?zip=/9/items/hokusaimangav4kats/hokusaimangav4kats_jp2.zip&file=hokusaimangav4kats_jp2/hokusaimangav4kats_0033.jp2&id=hokusaimangav4kats&scale=4&rotate=0",
+        ]
+      }
+    ]
+  }
+]
