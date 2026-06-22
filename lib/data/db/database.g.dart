@@ -88,6 +88,17 @@ class $MangaTableTable extends MangaTable
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _readingDirectionMeta = const VerificationMeta(
+    'readingDirection',
+  );
+  @override
+  late final GeneratedColumn<String> readingDirection = GeneratedColumn<String>(
+    'reading_direction',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -121,6 +132,7 @@ class $MangaTableTable extends MangaTable
     favoriteOrder,
     lastReadChapterId,
     lastReadAt,
+    readingDirection,
     createdAt,
     updatedAt,
   ];
@@ -193,6 +205,15 @@ class $MangaTableTable extends MangaTable
         ),
       );
     }
+    if (data.containsKey('reading_direction')) {
+      context.handle(
+        _readingDirectionMeta,
+        readingDirection.isAcceptableOrUnknown(
+          data['reading_direction']!,
+          _readingDirectionMeta,
+        ),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -242,6 +263,10 @@ class $MangaTableTable extends MangaTable
         DriftSqlType.dateTime,
         data['${effectivePrefix}last_read_at'],
       ),
+      readingDirection: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}reading_direction'],
+      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -273,6 +298,10 @@ class MangaRow extends DataClass implements Insertable<MangaRow> {
 
   /// Drives the "started reading sorts to top" rule.
   final DateTime? lastReadAt;
+
+  /// Per-manga reading direction override: 'ltr', 'rtl', or null = follow the
+  /// global default.
+  final String? readingDirection;
   final DateTime createdAt;
   final DateTime updatedAt;
   const MangaRow({
@@ -283,6 +312,7 @@ class MangaRow extends DataClass implements Insertable<MangaRow> {
     this.favoriteOrder,
     this.lastReadChapterId,
     this.lastReadAt,
+    this.readingDirection,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -301,6 +331,9 @@ class MangaRow extends DataClass implements Insertable<MangaRow> {
     }
     if (!nullToAbsent || lastReadAt != null) {
       map['last_read_at'] = Variable<DateTime>(lastReadAt);
+    }
+    if (!nullToAbsent || readingDirection != null) {
+      map['reading_direction'] = Variable<String>(readingDirection);
     }
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
@@ -322,6 +355,9 @@ class MangaRow extends DataClass implements Insertable<MangaRow> {
       lastReadAt: lastReadAt == null && nullToAbsent
           ? const Value.absent()
           : Value(lastReadAt),
+      readingDirection: readingDirection == null && nullToAbsent
+          ? const Value.absent()
+          : Value(readingDirection),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -340,6 +376,7 @@ class MangaRow extends DataClass implements Insertable<MangaRow> {
       favoriteOrder: serializer.fromJson<int?>(json['favoriteOrder']),
       lastReadChapterId: serializer.fromJson<int?>(json['lastReadChapterId']),
       lastReadAt: serializer.fromJson<DateTime?>(json['lastReadAt']),
+      readingDirection: serializer.fromJson<String?>(json['readingDirection']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
@@ -355,6 +392,7 @@ class MangaRow extends DataClass implements Insertable<MangaRow> {
       'favoriteOrder': serializer.toJson<int?>(favoriteOrder),
       'lastReadChapterId': serializer.toJson<int?>(lastReadChapterId),
       'lastReadAt': serializer.toJson<DateTime?>(lastReadAt),
+      'readingDirection': serializer.toJson<String?>(readingDirection),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
@@ -368,6 +406,7 @@ class MangaRow extends DataClass implements Insertable<MangaRow> {
     Value<int?> favoriteOrder = const Value.absent(),
     Value<int?> lastReadChapterId = const Value.absent(),
     Value<DateTime?> lastReadAt = const Value.absent(),
+    Value<String?> readingDirection = const Value.absent(),
     DateTime? createdAt,
     DateTime? updatedAt,
   }) => MangaRow(
@@ -382,6 +421,9 @@ class MangaRow extends DataClass implements Insertable<MangaRow> {
         ? lastReadChapterId.value
         : this.lastReadChapterId,
     lastReadAt: lastReadAt.present ? lastReadAt.value : this.lastReadAt,
+    readingDirection: readingDirection.present
+        ? readingDirection.value
+        : this.readingDirection,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
   );
@@ -404,6 +446,9 @@ class MangaRow extends DataClass implements Insertable<MangaRow> {
       lastReadAt: data.lastReadAt.present
           ? data.lastReadAt.value
           : this.lastReadAt,
+      readingDirection: data.readingDirection.present
+          ? data.readingDirection.value
+          : this.readingDirection,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -419,6 +464,7 @@ class MangaRow extends DataClass implements Insertable<MangaRow> {
           ..write('favoriteOrder: $favoriteOrder, ')
           ..write('lastReadChapterId: $lastReadChapterId, ')
           ..write('lastReadAt: $lastReadAt, ')
+          ..write('readingDirection: $readingDirection, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -434,6 +480,7 @@ class MangaRow extends DataClass implements Insertable<MangaRow> {
     favoriteOrder,
     lastReadChapterId,
     lastReadAt,
+    readingDirection,
     createdAt,
     updatedAt,
   );
@@ -448,6 +495,7 @@ class MangaRow extends DataClass implements Insertable<MangaRow> {
           other.favoriteOrder == this.favoriteOrder &&
           other.lastReadChapterId == this.lastReadChapterId &&
           other.lastReadAt == this.lastReadAt &&
+          other.readingDirection == this.readingDirection &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -460,6 +508,7 @@ class MangaTableCompanion extends UpdateCompanion<MangaRow> {
   final Value<int?> favoriteOrder;
   final Value<int?> lastReadChapterId;
   final Value<DateTime?> lastReadAt;
+  final Value<String?> readingDirection;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<int> rowid;
@@ -471,6 +520,7 @@ class MangaTableCompanion extends UpdateCompanion<MangaRow> {
     this.favoriteOrder = const Value.absent(),
     this.lastReadChapterId = const Value.absent(),
     this.lastReadAt = const Value.absent(),
+    this.readingDirection = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -483,6 +533,7 @@ class MangaTableCompanion extends UpdateCompanion<MangaRow> {
     this.favoriteOrder = const Value.absent(),
     this.lastReadChapterId = const Value.absent(),
     this.lastReadAt = const Value.absent(),
+    this.readingDirection = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -497,6 +548,7 @@ class MangaTableCompanion extends UpdateCompanion<MangaRow> {
     Expression<int>? favoriteOrder,
     Expression<int>? lastReadChapterId,
     Expression<DateTime>? lastReadAt,
+    Expression<String>? readingDirection,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<int>? rowid,
@@ -509,6 +561,7 @@ class MangaTableCompanion extends UpdateCompanion<MangaRow> {
       if (favoriteOrder != null) 'favorite_order': favoriteOrder,
       if (lastReadChapterId != null) 'last_read_chapter_id': lastReadChapterId,
       if (lastReadAt != null) 'last_read_at': lastReadAt,
+      if (readingDirection != null) 'reading_direction': readingDirection,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (rowid != null) 'rowid': rowid,
@@ -523,6 +576,7 @@ class MangaTableCompanion extends UpdateCompanion<MangaRow> {
     Value<int?>? favoriteOrder,
     Value<int?>? lastReadChapterId,
     Value<DateTime?>? lastReadAt,
+    Value<String?>? readingDirection,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
     Value<int>? rowid,
@@ -535,6 +589,7 @@ class MangaTableCompanion extends UpdateCompanion<MangaRow> {
       favoriteOrder: favoriteOrder ?? this.favoriteOrder,
       lastReadChapterId: lastReadChapterId ?? this.lastReadChapterId,
       lastReadAt: lastReadAt ?? this.lastReadAt,
+      readingDirection: readingDirection ?? this.readingDirection,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       rowid: rowid ?? this.rowid,
@@ -565,6 +620,9 @@ class MangaTableCompanion extends UpdateCompanion<MangaRow> {
     if (lastReadAt.present) {
       map['last_read_at'] = Variable<DateTime>(lastReadAt.value);
     }
+    if (readingDirection.present) {
+      map['reading_direction'] = Variable<String>(readingDirection.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -587,6 +645,7 @@ class MangaTableCompanion extends UpdateCompanion<MangaRow> {
           ..write('favoriteOrder: $favoriteOrder, ')
           ..write('lastReadChapterId: $lastReadChapterId, ')
           ..write('lastReadAt: $lastReadAt, ')
+          ..write('readingDirection: $readingDirection, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
@@ -638,6 +697,15 @@ class $ChapterTableTable extends ChapterTable
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
+  );
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+    'title',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _sortOrderMeta = const VerificationMeta(
     'sortOrder',
@@ -718,6 +786,7 @@ class $ChapterTableTable extends ChapterTable
     id,
     mangaId,
     sourceChapterId,
+    title,
     sortOrder,
     pageCount,
     isDownloaded,
@@ -758,6 +827,12 @@ class $ChapterTableTable extends ChapterTable
       );
     } else if (isInserting) {
       context.missing(_sourceChapterIdMeta);
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+        _titleMeta,
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+      );
     }
     if (data.containsKey('sort_order')) {
       context.handle(
@@ -831,6 +906,10 @@ class $ChapterTableTable extends ChapterTable
         DriftSqlType.string,
         data['${effectivePrefix}source_chapter_id'],
       )!,
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      ),
       sortOrder: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}sort_order'],
@@ -868,6 +947,9 @@ class ChapterRow extends DataClass implements Insertable<ChapterRow> {
   final int id;
   final String mangaId;
   final String sourceChapterId;
+
+  /// Optional display name from the JSON; falls back to the id when absent.
+  final String? title;
   final int sortOrder;
   final int pageCount;
   final bool isDownloaded;
@@ -880,6 +962,7 @@ class ChapterRow extends DataClass implements Insertable<ChapterRow> {
     required this.id,
     required this.mangaId,
     required this.sourceChapterId,
+    this.title,
     required this.sortOrder,
     required this.pageCount,
     required this.isDownloaded,
@@ -893,6 +976,9 @@ class ChapterRow extends DataClass implements Insertable<ChapterRow> {
     map['id'] = Variable<int>(id);
     map['manga_id'] = Variable<String>(mangaId);
     map['source_chapter_id'] = Variable<String>(sourceChapterId);
+    if (!nullToAbsent || title != null) {
+      map['title'] = Variable<String>(title);
+    }
     map['sort_order'] = Variable<int>(sortOrder);
     map['page_count'] = Variable<int>(pageCount);
     map['is_downloaded'] = Variable<bool>(isDownloaded);
@@ -911,6 +997,9 @@ class ChapterRow extends DataClass implements Insertable<ChapterRow> {
       id: Value(id),
       mangaId: Value(mangaId),
       sourceChapterId: Value(sourceChapterId),
+      title: title == null && nullToAbsent
+          ? const Value.absent()
+          : Value(title),
       sortOrder: Value(sortOrder),
       pageCount: Value(pageCount),
       isDownloaded: Value(isDownloaded),
@@ -933,6 +1022,7 @@ class ChapterRow extends DataClass implements Insertable<ChapterRow> {
       id: serializer.fromJson<int>(json['id']),
       mangaId: serializer.fromJson<String>(json['mangaId']),
       sourceChapterId: serializer.fromJson<String>(json['sourceChapterId']),
+      title: serializer.fromJson<String?>(json['title']),
       sortOrder: serializer.fromJson<int>(json['sortOrder']),
       pageCount: serializer.fromJson<int>(json['pageCount']),
       isDownloaded: serializer.fromJson<bool>(json['isDownloaded']),
@@ -948,6 +1038,7 @@ class ChapterRow extends DataClass implements Insertable<ChapterRow> {
       'id': serializer.toJson<int>(id),
       'mangaId': serializer.toJson<String>(mangaId),
       'sourceChapterId': serializer.toJson<String>(sourceChapterId),
+      'title': serializer.toJson<String?>(title),
       'sortOrder': serializer.toJson<int>(sortOrder),
       'pageCount': serializer.toJson<int>(pageCount),
       'isDownloaded': serializer.toJson<bool>(isDownloaded),
@@ -961,6 +1052,7 @@ class ChapterRow extends DataClass implements Insertable<ChapterRow> {
     int? id,
     String? mangaId,
     String? sourceChapterId,
+    Value<String?> title = const Value.absent(),
     int? sortOrder,
     int? pageCount,
     bool? isDownloaded,
@@ -971,6 +1063,7 @@ class ChapterRow extends DataClass implements Insertable<ChapterRow> {
     id: id ?? this.id,
     mangaId: mangaId ?? this.mangaId,
     sourceChapterId: sourceChapterId ?? this.sourceChapterId,
+    title: title.present ? title.value : this.title,
     sortOrder: sortOrder ?? this.sortOrder,
     pageCount: pageCount ?? this.pageCount,
     isDownloaded: isDownloaded ?? this.isDownloaded,
@@ -987,6 +1080,7 @@ class ChapterRow extends DataClass implements Insertable<ChapterRow> {
       sourceChapterId: data.sourceChapterId.present
           ? data.sourceChapterId.value
           : this.sourceChapterId,
+      title: data.title.present ? data.title.value : this.title,
       sortOrder: data.sortOrder.present ? data.sortOrder.value : this.sortOrder,
       pageCount: data.pageCount.present ? data.pageCount.value : this.pageCount,
       isDownloaded: data.isDownloaded.present
@@ -1008,6 +1102,7 @@ class ChapterRow extends DataClass implements Insertable<ChapterRow> {
           ..write('id: $id, ')
           ..write('mangaId: $mangaId, ')
           ..write('sourceChapterId: $sourceChapterId, ')
+          ..write('title: $title, ')
           ..write('sortOrder: $sortOrder, ')
           ..write('pageCount: $pageCount, ')
           ..write('isDownloaded: $isDownloaded, ')
@@ -1023,6 +1118,7 @@ class ChapterRow extends DataClass implements Insertable<ChapterRow> {
     id,
     mangaId,
     sourceChapterId,
+    title,
     sortOrder,
     pageCount,
     isDownloaded,
@@ -1037,6 +1133,7 @@ class ChapterRow extends DataClass implements Insertable<ChapterRow> {
           other.id == this.id &&
           other.mangaId == this.mangaId &&
           other.sourceChapterId == this.sourceChapterId &&
+          other.title == this.title &&
           other.sortOrder == this.sortOrder &&
           other.pageCount == this.pageCount &&
           other.isDownloaded == this.isDownloaded &&
@@ -1049,6 +1146,7 @@ class ChapterTableCompanion extends UpdateCompanion<ChapterRow> {
   final Value<int> id;
   final Value<String> mangaId;
   final Value<String> sourceChapterId;
+  final Value<String?> title;
   final Value<int> sortOrder;
   final Value<int> pageCount;
   final Value<bool> isDownloaded;
@@ -1059,6 +1157,7 @@ class ChapterTableCompanion extends UpdateCompanion<ChapterRow> {
     this.id = const Value.absent(),
     this.mangaId = const Value.absent(),
     this.sourceChapterId = const Value.absent(),
+    this.title = const Value.absent(),
     this.sortOrder = const Value.absent(),
     this.pageCount = const Value.absent(),
     this.isDownloaded = const Value.absent(),
@@ -1070,6 +1169,7 @@ class ChapterTableCompanion extends UpdateCompanion<ChapterRow> {
     this.id = const Value.absent(),
     required String mangaId,
     required String sourceChapterId,
+    this.title = const Value.absent(),
     required int sortOrder,
     this.pageCount = const Value.absent(),
     this.isDownloaded = const Value.absent(),
@@ -1083,6 +1183,7 @@ class ChapterTableCompanion extends UpdateCompanion<ChapterRow> {
     Expression<int>? id,
     Expression<String>? mangaId,
     Expression<String>? sourceChapterId,
+    Expression<String>? title,
     Expression<int>? sortOrder,
     Expression<int>? pageCount,
     Expression<bool>? isDownloaded,
@@ -1094,6 +1195,7 @@ class ChapterTableCompanion extends UpdateCompanion<ChapterRow> {
       if (id != null) 'id': id,
       if (mangaId != null) 'manga_id': mangaId,
       if (sourceChapterId != null) 'source_chapter_id': sourceChapterId,
+      if (title != null) 'title': title,
       if (sortOrder != null) 'sort_order': sortOrder,
       if (pageCount != null) 'page_count': pageCount,
       if (isDownloaded != null) 'is_downloaded': isDownloaded,
@@ -1107,6 +1209,7 @@ class ChapterTableCompanion extends UpdateCompanion<ChapterRow> {
     Value<int>? id,
     Value<String>? mangaId,
     Value<String>? sourceChapterId,
+    Value<String?>? title,
     Value<int>? sortOrder,
     Value<int>? pageCount,
     Value<bool>? isDownloaded,
@@ -1118,6 +1221,7 @@ class ChapterTableCompanion extends UpdateCompanion<ChapterRow> {
       id: id ?? this.id,
       mangaId: mangaId ?? this.mangaId,
       sourceChapterId: sourceChapterId ?? this.sourceChapterId,
+      title: title ?? this.title,
       sortOrder: sortOrder ?? this.sortOrder,
       pageCount: pageCount ?? this.pageCount,
       isDownloaded: isDownloaded ?? this.isDownloaded,
@@ -1138,6 +1242,9 @@ class ChapterTableCompanion extends UpdateCompanion<ChapterRow> {
     }
     if (sourceChapterId.present) {
       map['source_chapter_id'] = Variable<String>(sourceChapterId.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
     }
     if (sortOrder.present) {
       map['sort_order'] = Variable<int>(sortOrder.value);
@@ -1166,6 +1273,7 @@ class ChapterTableCompanion extends UpdateCompanion<ChapterRow> {
           ..write('id: $id, ')
           ..write('mangaId: $mangaId, ')
           ..write('sourceChapterId: $sourceChapterId, ')
+          ..write('title: $title, ')
           ..write('sortOrder: $sortOrder, ')
           ..write('pageCount: $pageCount, ')
           ..write('isDownloaded: $isDownloaded, ')
@@ -1535,15 +1643,380 @@ class PageTableCompanion extends UpdateCompanion<PageRow> {
   }
 }
 
+class $FavoritePageTableTable extends FavoritePageTable
+    with TableInfo<$FavoritePageTableTable, FavoritePageRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $FavoritePageTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _mangaIdMeta = const VerificationMeta(
+    'mangaId',
+  );
+  @override
+  late final GeneratedColumn<String> mangaId = GeneratedColumn<String>(
+    'manga_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES manga (identifier)',
+    ),
+  );
+  static const VerificationMeta _chapterIdMeta = const VerificationMeta(
+    'chapterId',
+  );
+  @override
+  late final GeneratedColumn<int> chapterId = GeneratedColumn<int>(
+    'chapter_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES chapters (id)',
+    ),
+  );
+  static const VerificationMeta _pageIndexMeta = const VerificationMeta(
+    'pageIndex',
+  );
+  @override
+  late final GeneratedColumn<int> pageIndex = GeneratedColumn<int>(
+    'page_index',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    mangaId,
+    chapterId,
+    pageIndex,
+    createdAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'favorite_pages';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<FavoritePageRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('manga_id')) {
+      context.handle(
+        _mangaIdMeta,
+        mangaId.isAcceptableOrUnknown(data['manga_id']!, _mangaIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_mangaIdMeta);
+    }
+    if (data.containsKey('chapter_id')) {
+      context.handle(
+        _chapterIdMeta,
+        chapterId.isAcceptableOrUnknown(data['chapter_id']!, _chapterIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_chapterIdMeta);
+    }
+    if (data.containsKey('page_index')) {
+      context.handle(
+        _pageIndexMeta,
+        pageIndex.isAcceptableOrUnknown(data['page_index']!, _pageIndexMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_pageIndexMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {chapterId, pageIndex},
+  ];
+  @override
+  FavoritePageRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return FavoritePageRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      mangaId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}manga_id'],
+      )!,
+      chapterId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}chapter_id'],
+      )!,
+      pageIndex: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}page_index'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $FavoritePageTableTable createAlias(String alias) {
+    return $FavoritePageTableTable(attachedDatabase, alias);
+  }
+}
+
+class FavoritePageRow extends DataClass implements Insertable<FavoritePageRow> {
+  final int id;
+  final String mangaId;
+  final int chapterId;
+  final int pageIndex;
+  final DateTime createdAt;
+  const FavoritePageRow({
+    required this.id,
+    required this.mangaId,
+    required this.chapterId,
+    required this.pageIndex,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['manga_id'] = Variable<String>(mangaId);
+    map['chapter_id'] = Variable<int>(chapterId);
+    map['page_index'] = Variable<int>(pageIndex);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  FavoritePageTableCompanion toCompanion(bool nullToAbsent) {
+    return FavoritePageTableCompanion(
+      id: Value(id),
+      mangaId: Value(mangaId),
+      chapterId: Value(chapterId),
+      pageIndex: Value(pageIndex),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory FavoritePageRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return FavoritePageRow(
+      id: serializer.fromJson<int>(json['id']),
+      mangaId: serializer.fromJson<String>(json['mangaId']),
+      chapterId: serializer.fromJson<int>(json['chapterId']),
+      pageIndex: serializer.fromJson<int>(json['pageIndex']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'mangaId': serializer.toJson<String>(mangaId),
+      'chapterId': serializer.toJson<int>(chapterId),
+      'pageIndex': serializer.toJson<int>(pageIndex),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  FavoritePageRow copyWith({
+    int? id,
+    String? mangaId,
+    int? chapterId,
+    int? pageIndex,
+    DateTime? createdAt,
+  }) => FavoritePageRow(
+    id: id ?? this.id,
+    mangaId: mangaId ?? this.mangaId,
+    chapterId: chapterId ?? this.chapterId,
+    pageIndex: pageIndex ?? this.pageIndex,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  FavoritePageRow copyWithCompanion(FavoritePageTableCompanion data) {
+    return FavoritePageRow(
+      id: data.id.present ? data.id.value : this.id,
+      mangaId: data.mangaId.present ? data.mangaId.value : this.mangaId,
+      chapterId: data.chapterId.present ? data.chapterId.value : this.chapterId,
+      pageIndex: data.pageIndex.present ? data.pageIndex.value : this.pageIndex,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('FavoritePageRow(')
+          ..write('id: $id, ')
+          ..write('mangaId: $mangaId, ')
+          ..write('chapterId: $chapterId, ')
+          ..write('pageIndex: $pageIndex, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, mangaId, chapterId, pageIndex, createdAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is FavoritePageRow &&
+          other.id == this.id &&
+          other.mangaId == this.mangaId &&
+          other.chapterId == this.chapterId &&
+          other.pageIndex == this.pageIndex &&
+          other.createdAt == this.createdAt);
+}
+
+class FavoritePageTableCompanion extends UpdateCompanion<FavoritePageRow> {
+  final Value<int> id;
+  final Value<String> mangaId;
+  final Value<int> chapterId;
+  final Value<int> pageIndex;
+  final Value<DateTime> createdAt;
+  const FavoritePageTableCompanion({
+    this.id = const Value.absent(),
+    this.mangaId = const Value.absent(),
+    this.chapterId = const Value.absent(),
+    this.pageIndex = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  });
+  FavoritePageTableCompanion.insert({
+    this.id = const Value.absent(),
+    required String mangaId,
+    required int chapterId,
+    required int pageIndex,
+    this.createdAt = const Value.absent(),
+  }) : mangaId = Value(mangaId),
+       chapterId = Value(chapterId),
+       pageIndex = Value(pageIndex);
+  static Insertable<FavoritePageRow> custom({
+    Expression<int>? id,
+    Expression<String>? mangaId,
+    Expression<int>? chapterId,
+    Expression<int>? pageIndex,
+    Expression<DateTime>? createdAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (mangaId != null) 'manga_id': mangaId,
+      if (chapterId != null) 'chapter_id': chapterId,
+      if (pageIndex != null) 'page_index': pageIndex,
+      if (createdAt != null) 'created_at': createdAt,
+    });
+  }
+
+  FavoritePageTableCompanion copyWith({
+    Value<int>? id,
+    Value<String>? mangaId,
+    Value<int>? chapterId,
+    Value<int>? pageIndex,
+    Value<DateTime>? createdAt,
+  }) {
+    return FavoritePageTableCompanion(
+      id: id ?? this.id,
+      mangaId: mangaId ?? this.mangaId,
+      chapterId: chapterId ?? this.chapterId,
+      pageIndex: pageIndex ?? this.pageIndex,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (mangaId.present) {
+      map['manga_id'] = Variable<String>(mangaId.value);
+    }
+    if (chapterId.present) {
+      map['chapter_id'] = Variable<int>(chapterId.value);
+    }
+    if (pageIndex.present) {
+      map['page_index'] = Variable<int>(pageIndex.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('FavoritePageTableCompanion(')
+          ..write('id: $id, ')
+          ..write('mangaId: $mangaId, ')
+          ..write('chapterId: $chapterId, ')
+          ..write('pageIndex: $pageIndex, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $MangaTableTable mangaTable = $MangaTableTable(this);
   late final $ChapterTableTable chapterTable = $ChapterTableTable(this);
   late final $PageTableTable pageTable = $PageTableTable(this);
+  late final $FavoritePageTableTable favoritePageTable =
+      $FavoritePageTableTable(this);
   late final MangaDao mangaDao = MangaDao(this as AppDatabase);
   late final ChapterDao chapterDao = ChapterDao(this as AppDatabase);
   late final PageDao pageDao = PageDao(this as AppDatabase);
+  late final FavoritePageDao favoritePageDao = FavoritePageDao(
+    this as AppDatabase,
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -1552,6 +2025,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     mangaTable,
     chapterTable,
     pageTable,
+    favoritePageTable,
   ];
 }
 
@@ -1564,6 +2038,7 @@ typedef $$MangaTableTableCreateCompanionBuilder =
       Value<int?> favoriteOrder,
       Value<int?> lastReadChapterId,
       Value<DateTime?> lastReadAt,
+      Value<String?> readingDirection,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<int> rowid,
@@ -1577,6 +2052,7 @@ typedef $$MangaTableTableUpdateCompanionBuilder =
       Value<int?> favoriteOrder,
       Value<int?> lastReadChapterId,
       Value<DateTime?> lastReadAt,
+      Value<String?> readingDirection,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<int> rowid,
@@ -1604,6 +2080,35 @@ final class $$MangaTableTableReferences
         );
 
     final cache = $_typedResult.readTableOrNull(_chapterTableRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$FavoritePageTableTable, List<FavoritePageRow>>
+  _favoritePageTableRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.favoritePageTable,
+        aliasName: $_aliasNameGenerator(
+          db.mangaTable.identifier,
+          db.favoritePageTable.mangaId,
+        ),
+      );
+
+  $$FavoritePageTableTableProcessedTableManager get favoritePageTableRefs {
+    final manager =
+        $$FavoritePageTableTableTableManager(
+          $_db,
+          $_db.favoritePageTable,
+        ).filter(
+          (f) => f.mangaId.identifier.sqlEquals(
+            $_itemColumn<String>('identifier')!,
+          ),
+        );
+
+    final cache = $_typedResult.readTableOrNull(
+      _favoritePageTableRefsTable($_db),
+    );
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -1654,6 +2159,11 @@ class $$MangaTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get readingDirection => $composableBuilder(
+    column: $table.readingDirection,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnFilters(column),
@@ -1680,6 +2190,31 @@ class $$MangaTableTableFilterComposer
           }) => $$ChapterTableTableFilterComposer(
             $db: $db,
             $table: $db.chapterTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> favoritePageTableRefs(
+    Expression<bool> Function($$FavoritePageTableTableFilterComposer f) f,
+  ) {
+    final $$FavoritePageTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.identifier,
+      referencedTable: $db.favoritePageTable,
+      getReferencedColumn: (t) => t.mangaId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$FavoritePageTableTableFilterComposer(
+            $db: $db,
+            $table: $db.favoritePageTable,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -1734,6 +2269,11 @@ class $$MangaTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get readingDirection => $composableBuilder(
+    column: $table.readingDirection,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -1785,6 +2325,11 @@ class $$MangaTableTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<String> get readingDirection => $composableBuilder(
+    column: $table.readingDirection,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
@@ -1815,6 +2360,32 @@ class $$MangaTableTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> favoritePageTableRefs<T extends Object>(
+    Expression<T> Function($$FavoritePageTableTableAnnotationComposer a) f,
+  ) {
+    final $$FavoritePageTableTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.identifier,
+          referencedTable: $db.favoritePageTable,
+          getReferencedColumn: (t) => t.mangaId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$FavoritePageTableTableAnnotationComposer(
+                $db: $db,
+                $table: $db.favoritePageTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$MangaTableTableTableManager
@@ -1830,7 +2401,10 @@ class $$MangaTableTableTableManager
           $$MangaTableTableUpdateCompanionBuilder,
           (MangaRow, $$MangaTableTableReferences),
           MangaRow,
-          PrefetchHooks Function({bool chapterTableRefs})
+          PrefetchHooks Function({
+            bool chapterTableRefs,
+            bool favoritePageTableRefs,
+          })
         > {
   $$MangaTableTableTableManager(_$AppDatabase db, $MangaTableTable table)
     : super(
@@ -1852,6 +2426,7 @@ class $$MangaTableTableTableManager
                 Value<int?> favoriteOrder = const Value.absent(),
                 Value<int?> lastReadChapterId = const Value.absent(),
                 Value<DateTime?> lastReadAt = const Value.absent(),
+                Value<String?> readingDirection = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -1863,6 +2438,7 @@ class $$MangaTableTableTableManager
                 favoriteOrder: favoriteOrder,
                 lastReadChapterId: lastReadChapterId,
                 lastReadAt: lastReadAt,
+                readingDirection: readingDirection,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -1876,6 +2452,7 @@ class $$MangaTableTableTableManager
                 Value<int?> favoriteOrder = const Value.absent(),
                 Value<int?> lastReadChapterId = const Value.absent(),
                 Value<DateTime?> lastReadAt = const Value.absent(),
+                Value<String?> readingDirection = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -1887,6 +2464,7 @@ class $$MangaTableTableTableManager
                 favoriteOrder: favoriteOrder,
                 lastReadChapterId: lastReadChapterId,
                 lastReadAt: lastReadAt,
+                readingDirection: readingDirection,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -1899,38 +2477,63 @@ class $$MangaTableTableTableManager
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({chapterTableRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [if (chapterTableRefs) db.chapterTable],
-              addJoins: null,
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (chapterTableRefs)
-                    await $_getPrefetchedData<
-                      MangaRow,
-                      $MangaTableTable,
-                      ChapterRow
-                    >(
-                      currentTable: table,
-                      referencedTable: $$MangaTableTableReferences
-                          ._chapterTableRefsTable(db),
-                      managerFromTypedResult: (p0) =>
-                          $$MangaTableTableReferences(
-                            db,
-                            table,
-                            p0,
-                          ).chapterTableRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where(
-                            (e) => e.mangaId == item.identifier,
-                          ),
-                      typedResults: items,
-                    ),
-                ];
+          prefetchHooksCallback:
+              ({chapterTableRefs = false, favoritePageTableRefs = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (chapterTableRefs) db.chapterTable,
+                    if (favoritePageTableRefs) db.favoritePageTable,
+                  ],
+                  addJoins: null,
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (chapterTableRefs)
+                        await $_getPrefetchedData<
+                          MangaRow,
+                          $MangaTableTable,
+                          ChapterRow
+                        >(
+                          currentTable: table,
+                          referencedTable: $$MangaTableTableReferences
+                              ._chapterTableRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$MangaTableTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).chapterTableRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.mangaId == item.identifier,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (favoritePageTableRefs)
+                        await $_getPrefetchedData<
+                          MangaRow,
+                          $MangaTableTable,
+                          FavoritePageRow
+                        >(
+                          currentTable: table,
+                          referencedTable: $$MangaTableTableReferences
+                              ._favoritePageTableRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$MangaTableTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).favoritePageTableRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.mangaId == item.identifier,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
               },
-            );
-          },
         ),
       );
 }
@@ -1947,13 +2550,17 @@ typedef $$MangaTableTableProcessedTableManager =
       $$MangaTableTableUpdateCompanionBuilder,
       (MangaRow, $$MangaTableTableReferences),
       MangaRow,
-      PrefetchHooks Function({bool chapterTableRefs})
+      PrefetchHooks Function({
+        bool chapterTableRefs,
+        bool favoritePageTableRefs,
+      })
     >;
 typedef $$ChapterTableTableCreateCompanionBuilder =
     ChapterTableCompanion Function({
       Value<int> id,
       required String mangaId,
       required String sourceChapterId,
+      Value<String?> title,
       required int sortOrder,
       Value<int> pageCount,
       Value<bool> isDownloaded,
@@ -1966,6 +2573,7 @@ typedef $$ChapterTableTableUpdateCompanionBuilder =
       Value<int> id,
       Value<String> mangaId,
       Value<String> sourceChapterId,
+      Value<String?> title,
       Value<int> sortOrder,
       Value<int> pageCount,
       Value<bool> isDownloaded,
@@ -2014,6 +2622,30 @@ final class $$ChapterTableTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<$FavoritePageTableTable, List<FavoritePageRow>>
+  _favoritePageTableRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.favoritePageTable,
+        aliasName: $_aliasNameGenerator(
+          db.chapterTable.id,
+          db.favoritePageTable.chapterId,
+        ),
+      );
+
+  $$FavoritePageTableTableProcessedTableManager get favoritePageTableRefs {
+    final manager = $$FavoritePageTableTableTableManager(
+      $_db,
+      $_db.favoritePageTable,
+    ).filter((f) => f.chapterId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _favoritePageTableRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$ChapterTableTableFilterComposer
@@ -2032,6 +2664,11 @@ class $$ChapterTableTableFilterComposer
 
   ColumnFilters<String> get sourceChapterId => $composableBuilder(
     column: $table.sourceChapterId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get title => $composableBuilder(
+    column: $table.title,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -2112,6 +2749,31 @@ class $$ChapterTableTableFilterComposer
     );
     return f(composer);
   }
+
+  Expression<bool> favoritePageTableRefs(
+    Expression<bool> Function($$FavoritePageTableTableFilterComposer f) f,
+  ) {
+    final $$FavoritePageTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.favoritePageTable,
+      getReferencedColumn: (t) => t.chapterId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$FavoritePageTableTableFilterComposer(
+            $db: $db,
+            $table: $db.favoritePageTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$ChapterTableTableOrderingComposer
@@ -2130,6 +2792,11 @@ class $$ChapterTableTableOrderingComposer
 
   ColumnOrderings<String> get sourceChapterId => $composableBuilder(
     column: $table.sourceChapterId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get title => $composableBuilder(
+    column: $table.title,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -2204,6 +2871,9 @@ class $$ChapterTableTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
   GeneratedColumn<int> get sortOrder =>
       $composableBuilder(column: $table.sortOrder, builder: (column) => column);
 
@@ -2275,6 +2945,32 @@ class $$ChapterTableTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> favoritePageTableRefs<T extends Object>(
+    Expression<T> Function($$FavoritePageTableTableAnnotationComposer a) f,
+  ) {
+    final $$FavoritePageTableTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.favoritePageTable,
+          getReferencedColumn: (t) => t.chapterId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$FavoritePageTableTableAnnotationComposer(
+                $db: $db,
+                $table: $db.favoritePageTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$ChapterTableTableTableManager
@@ -2290,7 +2986,11 @@ class $$ChapterTableTableTableManager
           $$ChapterTableTableUpdateCompanionBuilder,
           (ChapterRow, $$ChapterTableTableReferences),
           ChapterRow,
-          PrefetchHooks Function({bool mangaId, bool pageTableRefs})
+          PrefetchHooks Function({
+            bool mangaId,
+            bool pageTableRefs,
+            bool favoritePageTableRefs,
+          })
         > {
   $$ChapterTableTableTableManager(_$AppDatabase db, $ChapterTableTable table)
     : super(
@@ -2308,6 +3008,7 @@ class $$ChapterTableTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<String> mangaId = const Value.absent(),
                 Value<String> sourceChapterId = const Value.absent(),
+                Value<String?> title = const Value.absent(),
                 Value<int> sortOrder = const Value.absent(),
                 Value<int> pageCount = const Value.absent(),
                 Value<bool> isDownloaded = const Value.absent(),
@@ -2318,6 +3019,7 @@ class $$ChapterTableTableTableManager
                 id: id,
                 mangaId: mangaId,
                 sourceChapterId: sourceChapterId,
+                title: title,
                 sortOrder: sortOrder,
                 pageCount: pageCount,
                 isDownloaded: isDownloaded,
@@ -2330,6 +3032,7 @@ class $$ChapterTableTableTableManager
                 Value<int> id = const Value.absent(),
                 required String mangaId,
                 required String sourceChapterId,
+                Value<String?> title = const Value.absent(),
                 required int sortOrder,
                 Value<int> pageCount = const Value.absent(),
                 Value<bool> isDownloaded = const Value.absent(),
@@ -2340,6 +3043,7 @@ class $$ChapterTableTableTableManager
                 id: id,
                 mangaId: mangaId,
                 sourceChapterId: sourceChapterId,
+                title: title,
                 sortOrder: sortOrder,
                 pageCount: pageCount,
                 isDownloaded: isDownloaded,
@@ -2355,67 +3059,100 @@ class $$ChapterTableTableTableManager
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({mangaId = false, pageTableRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [if (pageTableRefs) db.pageTable],
-              addJoins:
-                  <
-                    T extends TableManagerState<
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic
-                    >
-                  >(state) {
-                    if (mangaId) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.mangaId,
-                                referencedTable: $$ChapterTableTableReferences
-                                    ._mangaIdTable(db),
-                                referencedColumn: $$ChapterTableTableReferences
-                                    ._mangaIdTable(db)
-                                    .identifier,
-                              )
-                              as T;
-                    }
+          prefetchHooksCallback:
+              ({
+                mangaId = false,
+                pageTableRefs = false,
+                favoritePageTableRefs = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (pageTableRefs) db.pageTable,
+                    if (favoritePageTableRefs) db.favoritePageTable,
+                  ],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (mangaId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.mangaId,
+                                    referencedTable:
+                                        $$ChapterTableTableReferences
+                                            ._mangaIdTable(db),
+                                    referencedColumn:
+                                        $$ChapterTableTableReferences
+                                            ._mangaIdTable(db)
+                                            .identifier,
+                                  )
+                                  as T;
+                        }
 
-                    return state;
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (pageTableRefs)
+                        await $_getPrefetchedData<
+                          ChapterRow,
+                          $ChapterTableTable,
+                          PageRow
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ChapterTableTableReferences
+                              ._pageTableRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$ChapterTableTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).pageTableRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.chapterId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (favoritePageTableRefs)
+                        await $_getPrefetchedData<
+                          ChapterRow,
+                          $ChapterTableTable,
+                          FavoritePageRow
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ChapterTableTableReferences
+                              ._favoritePageTableRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$ChapterTableTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).favoritePageTableRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.chapterId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
                   },
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (pageTableRefs)
-                    await $_getPrefetchedData<
-                      ChapterRow,
-                      $ChapterTableTable,
-                      PageRow
-                    >(
-                      currentTable: table,
-                      referencedTable: $$ChapterTableTableReferences
-                          ._pageTableRefsTable(db),
-                      managerFromTypedResult: (p0) =>
-                          $$ChapterTableTableReferences(
-                            db,
-                            table,
-                            p0,
-                          ).pageTableRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where((e) => e.chapterId == item.id),
-                      typedResults: items,
-                    ),
-                ];
+                );
               },
-            );
-          },
         ),
       );
 }
@@ -2432,7 +3169,11 @@ typedef $$ChapterTableTableProcessedTableManager =
       $$ChapterTableTableUpdateCompanionBuilder,
       (ChapterRow, $$ChapterTableTableReferences),
       ChapterRow,
-      PrefetchHooks Function({bool mangaId, bool pageTableRefs})
+      PrefetchHooks Function({
+        bool mangaId,
+        bool pageTableRefs,
+        bool favoritePageTableRefs,
+      })
     >;
 typedef $$PageTableTableCreateCompanionBuilder =
     PageTableCompanion Function({
@@ -2747,6 +3488,431 @@ typedef $$PageTableTableProcessedTableManager =
       PageRow,
       PrefetchHooks Function({bool chapterId})
     >;
+typedef $$FavoritePageTableTableCreateCompanionBuilder =
+    FavoritePageTableCompanion Function({
+      Value<int> id,
+      required String mangaId,
+      required int chapterId,
+      required int pageIndex,
+      Value<DateTime> createdAt,
+    });
+typedef $$FavoritePageTableTableUpdateCompanionBuilder =
+    FavoritePageTableCompanion Function({
+      Value<int> id,
+      Value<String> mangaId,
+      Value<int> chapterId,
+      Value<int> pageIndex,
+      Value<DateTime> createdAt,
+    });
+
+final class $$FavoritePageTableTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $FavoritePageTableTable,
+          FavoritePageRow
+        > {
+  $$FavoritePageTableTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $MangaTableTable _mangaIdTable(_$AppDatabase db) =>
+      db.mangaTable.createAlias(
+        $_aliasNameGenerator(
+          db.favoritePageTable.mangaId,
+          db.mangaTable.identifier,
+        ),
+      );
+
+  $$MangaTableTableProcessedTableManager get mangaId {
+    final $_column = $_itemColumn<String>('manga_id')!;
+
+    final manager = $$MangaTableTableTableManager(
+      $_db,
+      $_db.mangaTable,
+    ).filter((f) => f.identifier.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_mangaIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $ChapterTableTable _chapterIdTable(_$AppDatabase db) =>
+      db.chapterTable.createAlias(
+        $_aliasNameGenerator(
+          db.favoritePageTable.chapterId,
+          db.chapterTable.id,
+        ),
+      );
+
+  $$ChapterTableTableProcessedTableManager get chapterId {
+    final $_column = $_itemColumn<int>('chapter_id')!;
+
+    final manager = $$ChapterTableTableTableManager(
+      $_db,
+      $_db.chapterTable,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_chapterIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$FavoritePageTableTableFilterComposer
+    extends Composer<_$AppDatabase, $FavoritePageTableTable> {
+  $$FavoritePageTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get pageIndex => $composableBuilder(
+    column: $table.pageIndex,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$MangaTableTableFilterComposer get mangaId {
+    final $$MangaTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.mangaId,
+      referencedTable: $db.mangaTable,
+      getReferencedColumn: (t) => t.identifier,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$MangaTableTableFilterComposer(
+            $db: $db,
+            $table: $db.mangaTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$ChapterTableTableFilterComposer get chapterId {
+    final $$ChapterTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.chapterId,
+      referencedTable: $db.chapterTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ChapterTableTableFilterComposer(
+            $db: $db,
+            $table: $db.chapterTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$FavoritePageTableTableOrderingComposer
+    extends Composer<_$AppDatabase, $FavoritePageTableTable> {
+  $$FavoritePageTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get pageIndex => $composableBuilder(
+    column: $table.pageIndex,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$MangaTableTableOrderingComposer get mangaId {
+    final $$MangaTableTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.mangaId,
+      referencedTable: $db.mangaTable,
+      getReferencedColumn: (t) => t.identifier,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$MangaTableTableOrderingComposer(
+            $db: $db,
+            $table: $db.mangaTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$ChapterTableTableOrderingComposer get chapterId {
+    final $$ChapterTableTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.chapterId,
+      referencedTable: $db.chapterTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ChapterTableTableOrderingComposer(
+            $db: $db,
+            $table: $db.chapterTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$FavoritePageTableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $FavoritePageTableTable> {
+  $$FavoritePageTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get pageIndex =>
+      $composableBuilder(column: $table.pageIndex, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  $$MangaTableTableAnnotationComposer get mangaId {
+    final $$MangaTableTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.mangaId,
+      referencedTable: $db.mangaTable,
+      getReferencedColumn: (t) => t.identifier,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$MangaTableTableAnnotationComposer(
+            $db: $db,
+            $table: $db.mangaTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$ChapterTableTableAnnotationComposer get chapterId {
+    final $$ChapterTableTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.chapterId,
+      referencedTable: $db.chapterTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ChapterTableTableAnnotationComposer(
+            $db: $db,
+            $table: $db.chapterTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$FavoritePageTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $FavoritePageTableTable,
+          FavoritePageRow,
+          $$FavoritePageTableTableFilterComposer,
+          $$FavoritePageTableTableOrderingComposer,
+          $$FavoritePageTableTableAnnotationComposer,
+          $$FavoritePageTableTableCreateCompanionBuilder,
+          $$FavoritePageTableTableUpdateCompanionBuilder,
+          (FavoritePageRow, $$FavoritePageTableTableReferences),
+          FavoritePageRow,
+          PrefetchHooks Function({bool mangaId, bool chapterId})
+        > {
+  $$FavoritePageTableTableTableManager(
+    _$AppDatabase db,
+    $FavoritePageTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$FavoritePageTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$FavoritePageTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$FavoritePageTableTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> mangaId = const Value.absent(),
+                Value<int> chapterId = const Value.absent(),
+                Value<int> pageIndex = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+              }) => FavoritePageTableCompanion(
+                id: id,
+                mangaId: mangaId,
+                chapterId: chapterId,
+                pageIndex: pageIndex,
+                createdAt: createdAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String mangaId,
+                required int chapterId,
+                required int pageIndex,
+                Value<DateTime> createdAt = const Value.absent(),
+              }) => FavoritePageTableCompanion.insert(
+                id: id,
+                mangaId: mangaId,
+                chapterId: chapterId,
+                pageIndex: pageIndex,
+                createdAt: createdAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$FavoritePageTableTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({mangaId = false, chapterId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (mangaId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.mangaId,
+                                referencedTable:
+                                    $$FavoritePageTableTableReferences
+                                        ._mangaIdTable(db),
+                                referencedColumn:
+                                    $$FavoritePageTableTableReferences
+                                        ._mangaIdTable(db)
+                                        .identifier,
+                              )
+                              as T;
+                    }
+                    if (chapterId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.chapterId,
+                                referencedTable:
+                                    $$FavoritePageTableTableReferences
+                                        ._chapterIdTable(db),
+                                referencedColumn:
+                                    $$FavoritePageTableTableReferences
+                                        ._chapterIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$FavoritePageTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $FavoritePageTableTable,
+      FavoritePageRow,
+      $$FavoritePageTableTableFilterComposer,
+      $$FavoritePageTableTableOrderingComposer,
+      $$FavoritePageTableTableAnnotationComposer,
+      $$FavoritePageTableTableCreateCompanionBuilder,
+      $$FavoritePageTableTableUpdateCompanionBuilder,
+      (FavoritePageRow, $$FavoritePageTableTableReferences),
+      FavoritePageRow,
+      PrefetchHooks Function({bool mangaId, bool chapterId})
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -2757,4 +3923,6 @@ class $AppDatabaseManager {
       $$ChapterTableTableTableManager(_db, _db.chapterTable);
   $$PageTableTableTableManager get pageTable =>
       $$PageTableTableTableManager(_db, _db.pageTable);
+  $$FavoritePageTableTableTableManager get favoritePageTable =>
+      $$FavoritePageTableTableTableManager(_db, _db.favoritePageTable);
 }

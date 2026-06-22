@@ -30,6 +30,7 @@ _ReferenceChapter _$ReferenceChapterFromJson(Map<String, dynamic> json) =>
     _ReferenceChapter(
       id: json['id'] as String,
       order: (json['order'] as num).toInt(),
+      title: json['title'] as String?,
       pages:
           (json['pages'] as List<dynamic>?)?.map((e) => e as String).toList() ??
           const <String>[],
@@ -39,5 +40,6 @@ Map<String, dynamic> _$ReferenceChapterToJson(_ReferenceChapter instance) =>
     <String, dynamic>{
       'id': instance.id,
       'order': instance.order,
+      'title': instance.title,
       'pages': instance.pages,
     };

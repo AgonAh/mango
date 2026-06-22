@@ -22,6 +22,10 @@ class MangaTable extends Table {
   /// Drives the "started reading sorts to top" rule.
   DateTimeColumn get lastReadAt => dateTime().nullable()();
 
+  /// Per-manga reading direction override: 'ltr', 'rtl', or null = follow the
+  /// global default.
+  TextColumn get readingDirection => text().nullable()();
+
   DateTimeColumn get createdAt =>
       dateTime().withDefault(currentDateAndTime)();
   DateTimeColumn get updatedAt =>
@@ -42,6 +46,9 @@ class ChapterTable extends Table {
   TextColumn get mangaId =>
       text().references(MangaTable, #identifier)();
   TextColumn get sourceChapterId => text()();
+
+  /// Optional display name from the JSON; falls back to the id when absent.
+  TextColumn get title => text().nullable()();
   IntColumn get sortOrder => integer()();
   IntColumn get pageCount => integer().withDefault(const Constant(0))();
 
@@ -71,6 +78,26 @@ class PageTable extends Table {
   IntColumn get pageIndex => integer()();
   TextColumn get url => text()();
   TextColumn get localPath => text().nullable()();
+
+  @override
+  List<Set<Column>> get uniqueKeys => [
+        {chapterId, pageIndex},
+      ];
+}
+
+/// A user-favorited individual page, surfaced in its own section on the manga
+/// detail screen.
+@DataClassName('FavoritePageRow')
+class FavoritePageTable extends Table {
+  @override
+  String get tableName => 'favorite_pages';
+
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get mangaId => text().references(MangaTable, #identifier)();
+  IntColumn get chapterId => integer().references(ChapterTable, #id)();
+  IntColumn get pageIndex => integer()();
+  DateTimeColumn get createdAt =>
+      dateTime().withDefault(currentDateAndTime)();
 
   @override
   List<Set<Column>> get uniqueKeys => [

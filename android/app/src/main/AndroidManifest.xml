@@ -3,6 +3,10 @@
          Debug builds get this injected automatically; release builds need it
          declared here explicitly. -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Saving pages to the gallery. Android 10+ uses MediaStore (no
+         permission); this covers Android 9 and below. -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="29"/>
     <application
         android:label="mango"
         android:name="${applicationName}"

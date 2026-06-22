@@ -33,6 +33,12 @@ class SettingsService {
 
   Future<void> setPaceMs(int ms) => _write('paceMs', ms);
 
+  /// Global default reading direction ('ltr' or 'rtl'); RTL by default.
+  String get readingDirection => (_data['readingDirection'] as String?) ?? 'rtl';
+
+  Future<void> setReadingDirection(String dir) =>
+      _write('readingDirection', dir);
+
   Future<void> _write(String key, Object value) async {
     _data = {..._data, key: value};
     try {

@@ -25,6 +25,7 @@ abstract class ReferenceChapter with _$ReferenceChapter {
   const factory ReferenceChapter({
     required String id,
     required int order,
+    String? title,
     @Default(<String>[]) List<String> pages,
   }) = _ReferenceChapter;
 

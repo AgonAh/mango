@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/services/download_manager.dart';
 import '../../shared/providers.dart';
+import '../../shared/reading_direction.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -23,11 +24,41 @@ class SettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final pace = ref.watch(downloadManagerProvider).paceMs;
+    final direction = ref.watch(globalReadingDirectionProvider);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Settings')),
       body: ListView(
         children: [
+          const _SectionHeader('Reading'),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Default page direction',
+                    style: Theme.of(context).textTheme.bodyLarge),
+                Text(
+                  'Applies to manga without their own override',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                ),
+                const SizedBox(height: 8),
+                SegmentedButton<String>(
+                  segments: const [
+                    ButtonSegment(value: kDirRtl, label: Text('Right → Left')),
+                    ButtonSegment(value: kDirLtr, label: Text('Left → Right')),
+                  ],
+                  selected: {direction},
+                  onSelectionChanged: (s) => ref
+                      .read(globalReadingDirectionProvider.notifier)
+                      .set(s.first),
+                ),
+              ],
+            ),
+          ),
+          const Divider(),
           const _SectionHeader('Downloads'),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),

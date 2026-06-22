@@ -38,6 +38,16 @@ class MangaDao extends DatabaseAccessor<AppDatabase> with _$MangaDaoMixin {
         ),
       );
 
+  /// Sets the per-manga reading direction override ('ltr', 'rtl', or null to
+  /// follow the global default).
+  Future<void> setReadingDirection(String identifier, String? direction) =>
+      (update(mangaTable)..where((t) => t.identifier.equals(identifier))).write(
+        MangaTableCompanion(
+          readingDirection: Value(direction),
+          updatedAt: Value(DateTime.now()),
+        ),
+      );
+
   /// Records that [chapterId] was just opened, bumping last-read ordering.
   Future<void> touchLastRead(String identifier, int chapterId) =>
       (update(mangaTable)..where((t) => t.identifier.equals(identifier))).write(

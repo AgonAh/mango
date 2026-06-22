@@ -4,10 +4,15 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart'
+    hide DownloadProgress;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gal/gal.dart';
 
 import '../../data/db/database.dart';
+import '../../shared/chapter_format.dart';
 import '../../shared/providers.dart';
+import '../../shared/reading_direction.dart';
 import 'zoomable_page.dart';
 
 /// Arguments for opening the reader at a specific chapter and page.
@@ -51,6 +56,7 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
   int _chapterIndex = 0;
   int _currentPage = 0;
   bool _ready = false;
+  bool _reverse = false; // true = right-to-left paging
   bool _isZoomed = false;
   bool _showOverlay = false;
   bool _transitioning = false;
@@ -80,6 +86,9 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
 
   Future<void> _init() async {
     final db = ref.read(databaseProvider);
+    final manga = await db.mangaDao.getByIdentifier(widget.args.mangaId);
+    final globalDir = ref.read(globalReadingDirectionProvider);
+    _reverse = directionIsRtl(manga?.readingDirection, globalDir);
     _chapters = await db.chapterDao.getChaptersForManga(widget.args.mangaId);
     var index = _chapters.indexWhere((c) => c.id == widget.args.chapterId);
     if (index < 0) index = 0;
@@ -222,6 +231,13 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isFavoritePage = _ready
+        ? (ref
+                .watch(isFavoritePageProvider(
+                    (chapterId: _chapter.id, pageIndex: _currentPage)))
+                .value ??
+            false)
+        : false;
     return Scaffold(
       backgroundColor: Colors.black,
       body: !_ready
@@ -229,7 +245,7 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
           : Stack(
               children: [
                 _buildPager(),
-                _buildOverlay(),
+                _buildOverlay(isFavoritePage),
               ],
             ),
     );
@@ -250,6 +266,7 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
         child: PageView.builder(
         key: ValueKey('reader-chapter-${_chapter.id}'),
         controller: _controller,
+        reverse: _reverse,
         physics: lockPaging
             ? const NeverScrollableScrollPhysics()
             : const PageScrollPhysics(),
@@ -260,7 +277,7 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
           return _Interstitial(
             title: _hasPrev ? 'Previous chapter' : 'Start of manga',
             subtitle: _hasPrev
-                ? 'Chapter ${_chapters[_chapterIndex - 1].sortOrder}\nSwipe again to go back'
+                ? '${chapterName(_chapters[_chapterIndex - 1])}\nSwipe again to go back'
                 : null,
             icon: _hasPrev ? Icons.arrow_back : Icons.first_page,
             onTap: _toggleOverlay,
@@ -270,7 +287,7 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
           return _Interstitial(
             title: _hasNext ? 'Next chapter' : 'Last chapter',
             subtitle: _hasNext
-                ? 'Chapter ${_chapters[_chapterIndex + 1].sortOrder}\nSwipe again to continue'
+                ? '${chapterName(_chapters[_chapterIndex + 1])}\nSwipe again to continue'
                 : null,
             icon: _hasNext ? Icons.arrow_forward : Icons.done_all,
             onTap: _toggleOverlay,
@@ -293,7 +310,99 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
 
   void _toggleOverlay() => setState(() => _showOverlay = !_showOverlay);
 
-  Widget _buildOverlay() {
+  Widget _buildReaderMenu(bool isFavoritePage) {
+    return PopupMenuButton<String>(
+      icon: const Icon(Icons.more_vert, color: Colors.white),
+      onSelected: (value) {
+        switch (value) {
+          case 'fav':
+            ref.read(databaseProvider).favoritePageDao.toggle(
+                  widget.args.mangaId,
+                  _chapter.id,
+                  _currentPage,
+                );
+          case 'save':
+            _savePageToGallery();
+          case 'download':
+            ref.read(downloadManagerProvider.notifier).enqueueChapter(_chapter);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Downloading ${chapterName(_chapter)}')),
+            );
+        }
+      },
+      itemBuilder: (_) => [
+        PopupMenuItem(
+          value: 'fav',
+          child: Row(
+            children: [
+              Icon(isFavoritePage ? Icons.bookmark : Icons.bookmark_border),
+              const SizedBox(width: 12),
+              Text(isFavoritePage ? 'Unfavorite page' : 'Favorite page'),
+            ],
+          ),
+        ),
+        const PopupMenuItem(
+          value: 'save',
+          child: Row(
+            children: [
+              Icon(Icons.save_alt),
+              SizedBox(width: 12),
+              Text('Save page to gallery'),
+            ],
+          ),
+        ),
+        const PopupMenuItem(
+          value: 'download',
+          child: Row(
+            children: [
+              Icon(Icons.download_outlined),
+              SizedBox(width: 12),
+              Text('Download this chapter'),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _savePageToGallery() async {
+    if (_currentPage < 0 || _currentPage >= _pages.length) return;
+    final page = _pages[_currentPage];
+    void notify(String msg) {
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(msg)));
+      }
+    }
+
+    try {
+      // Use the downloaded file if present, otherwise the cached image
+      // (the page is on-screen, so it's already in the cache).
+      final local = page.localPath;
+      final String path;
+      if (local != null && local.isNotEmpty && File(local).existsSync()) {
+        path = local;
+      } else {
+        final file = await DefaultCacheManager().getSingleFile(page.url);
+        path = file.path;
+      }
+      if (!await Gal.hasAccess()) {
+        final granted = await Gal.requestAccess();
+        if (!granted) {
+          notify('Gallery access denied');
+          return;
+        }
+      }
+      await Gal.putImage(path, album: 'Mango');
+      notify('Saved to gallery');
+    } on GalException catch (e) {
+      notify('Could not save: ${e.type.message}');
+    } catch (_) {
+      notify('Could not save page');
+    }
+  }
+
+  Widget _buildOverlay(bool isFavoritePage) {
     return IgnorePointer(
       ignoring: !_showOverlay,
       child: AnimatedOpacity(
@@ -310,7 +419,7 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
                   ),
                   Expanded(
                     child: Text(
-                      'Chapter ${_chapter.sortOrder}',
+                      chapterName(_chapter),
                       style: const TextStyle(color: Colors.white),
                     ),
                   ),
@@ -318,7 +427,7 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
                     '${_currentPage + 1} / ${_pages.length}',
                     style: const TextStyle(color: Colors.white70),
                   ),
-                  const SizedBox(width: 12),
+                  _buildReaderMenu(isFavoritePage),
                 ],
               ),
             ),

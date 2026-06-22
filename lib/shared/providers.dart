@@ -2,6 +2,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../data/db/daos/favorite_page_dao.dart';
 import '../data/db/database.dart';
 import '../data/repositories/download_repository.dart';
 import '../data/repositories/manga_repository.dart';
@@ -63,4 +64,20 @@ final mangaDetailProvider = StreamProvider.family<MangaRow?, String>(
 final chaptersProvider = StreamProvider.family<List<ChapterRow>, String>(
   (ref, identifier) =>
       ref.watch(databaseProvider).chapterDao.watchChaptersForManga(identifier),
+);
+
+/// Favorited pages for a manga (joined with chapter + page for display).
+final favoritePagesProvider =
+    StreamProvider.family<List<FavoritePageView>, String>(
+  (ref, identifier) =>
+      ref.watch(databaseProvider).favoritePageDao.watchForManga(identifier),
+);
+
+/// Whether a specific page is favorited (for the reader's toggle).
+final isFavoritePageProvider =
+    StreamProvider.family<bool, ({int chapterId, int pageIndex})>(
+  (ref, key) => ref
+      .watch(databaseProvider)
+      .favoritePageDao
+      .watchIsFavorite(key.chapterId, key.pageIndex),
 );

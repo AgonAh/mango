@@ -97,6 +97,7 @@ class MangaRepository {
           ChapterTableCompanion.insert(
             mangaId: ref.identifier,
             sourceChapterId: ch.id,
+            title: Value(ch.title),
             sortOrder: ch.order,
             pageCount: Value(ch.pages.length),
           ),
@@ -119,6 +120,7 @@ class MangaRepository {
         await _db.chapterDao.updateChapter(
           existing.id,
           ChapterTableCompanion(
+            title: Value(ch.title),
             sortOrder: Value(ch.order),
             pageCount: Value(ch.pages.length),
             isDownloaded: Value(allDownloaded),

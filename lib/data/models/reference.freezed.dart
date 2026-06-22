@@ -293,7 +293,7 @@ as List<ReferenceChapter>,
 /// @nodoc
 mixin _$ReferenceChapter {
 
- String get id; int get order; List<String> get pages;
+ String get id; int get order; String? get title; List<String> get pages;
 /// Create a copy of ReferenceChapter
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -306,16 +306,16 @@ $ReferenceChapterCopyWith<ReferenceChapter> get copyWith => _$ReferenceChapterCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReferenceChapter&&(identical(other.id, id) || other.id == id)&&(identical(other.order, order) || other.order == order)&&const DeepCollectionEquality().equals(other.pages, pages));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReferenceChapter&&(identical(other.id, id) || other.id == id)&&(identical(other.order, order) || other.order == order)&&(identical(other.title, title) || other.title == title)&&const DeepCollectionEquality().equals(other.pages, pages));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,order,const DeepCollectionEquality().hash(pages));
+int get hashCode => Object.hash(runtimeType,id,order,title,const DeepCollectionEquality().hash(pages));
 
 @override
 String toString() {
-  return 'ReferenceChapter(id: $id, order: $order, pages: $pages)';
+  return 'ReferenceChapter(id: $id, order: $order, title: $title, pages: $pages)';
 }
 
 
@@ -326,7 +326,7 @@ abstract mixin class $ReferenceChapterCopyWith<$Res>  {
   factory $ReferenceChapterCopyWith(ReferenceChapter value, $Res Function(ReferenceChapter) _then) = _$ReferenceChapterCopyWithImpl;
 @useResult
 $Res call({
- String id, int order, List<String> pages
+ String id, int order, String? title, List<String> pages
 });
 
 
@@ -343,11 +343,12 @@ class _$ReferenceChapterCopyWithImpl<$Res>
 
 /// Create a copy of ReferenceChapter
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? order = null,Object? pages = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? order = null,Object? title = freezed,Object? pages = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,order: null == order ? _self.order : order // ignore: cast_nullable_to_non_nullable
-as int,pages: null == pages ? _self.pages : pages // ignore: cast_nullable_to_non_nullable
+as int,title: freezed == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String?,pages: null == pages ? _self.pages : pages // ignore: cast_nullable_to_non_nullable
 as List<String>,
   ));
 }
@@ -433,10 +434,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  int order,  List<String> pages)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  int order,  String? title,  List<String> pages)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ReferenceChapter() when $default != null:
-return $default(_that.id,_that.order,_that.pages);case _:
+return $default(_that.id,_that.order,_that.title,_that.pages);case _:
   return orElse();
 
 }
@@ -454,10 +455,10 @@ return $default(_that.id,_that.order,_that.pages);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  int order,  List<String> pages)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  int order,  String? title,  List<String> pages)  $default,) {final _that = this;
 switch (_that) {
 case _ReferenceChapter():
-return $default(_that.id,_that.order,_that.pages);case _:
+return $default(_that.id,_that.order,_that.title,_that.pages);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -474,10 +475,10 @@ return $default(_that.id,_that.order,_that.pages);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  int order,  List<String> pages)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  int order,  String? title,  List<String> pages)?  $default,) {final _that = this;
 switch (_that) {
 case _ReferenceChapter() when $default != null:
-return $default(_that.id,_that.order,_that.pages);case _:
+return $default(_that.id,_that.order,_that.title,_that.pages);case _:
   return null;
 
 }
@@ -489,11 +490,12 @@ return $default(_that.id,_that.order,_that.pages);case _:
 @JsonSerializable()
 
 class _ReferenceChapter implements ReferenceChapter {
-  const _ReferenceChapter({required this.id, required this.order, final  List<String> pages = const <String>[]}): _pages = pages;
+  const _ReferenceChapter({required this.id, required this.order, this.title, final  List<String> pages = const <String>[]}): _pages = pages;
   factory _ReferenceChapter.fromJson(Map<String, dynamic> json) => _$ReferenceChapterFromJson(json);
 
 @override final  String id;
 @override final  int order;
+@override final  String? title;
  final  List<String> _pages;
 @override@JsonKey() List<String> get pages {
   if (_pages is EqualUnmodifiableListView) return _pages;
@@ -515,16 +517,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReferenceChapter&&(identical(other.id, id) || other.id == id)&&(identical(other.order, order) || other.order == order)&&const DeepCollectionEquality().equals(other._pages, _pages));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReferenceChapter&&(identical(other.id, id) || other.id == id)&&(identical(other.order, order) || other.order == order)&&(identical(other.title, title) || other.title == title)&&const DeepCollectionEquality().equals(other._pages, _pages));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,order,const DeepCollectionEquality().hash(_pages));
+int get hashCode => Object.hash(runtimeType,id,order,title,const DeepCollectionEquality().hash(_pages));
 
 @override
 String toString() {
-  return 'ReferenceChapter(id: $id, order: $order, pages: $pages)';
+  return 'ReferenceChapter(id: $id, order: $order, title: $title, pages: $pages)';
 }
 
 
@@ -535,7 +537,7 @@ abstract mixin class _$ReferenceChapterCopyWith<$Res> implements $ReferenceChapt
   factory _$ReferenceChapterCopyWith(_ReferenceChapter value, $Res Function(_ReferenceChapter) _then) = __$ReferenceChapterCopyWithImpl;
 @override @useResult
 $Res call({
- String id, int order, List<String> pages
+ String id, int order, String? title, List<String> pages
 });
 
 
@@ -552,11 +554,12 @@ class __$ReferenceChapterCopyWithImpl<$Res>
 
 /// Create a copy of ReferenceChapter
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? order = null,Object? pages = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? order = null,Object? title = freezed,Object? pages = null,}) {
   return _then(_ReferenceChapter(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,order: null == order ? _self.order : order // ignore: cast_nullable_to_non_nullable
-as int,pages: null == pages ? _self._pages : pages // ignore: cast_nullable_to_non_nullable
+as int,title: freezed == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String?,pages: null == pages ? _self._pages : pages // ignore: cast_nullable_to_non_nullable
 as List<String>,
   ));
 }

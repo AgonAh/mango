@@ -5,6 +5,7 @@ import 'package:drift/drift.dart' show Value;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../db/database.dart';
+import '../../shared/chapter_format.dart';
 import '../../shared/providers.dart';
 
 /// Pace bounds (delay between successive file downloads), per the requirement
@@ -112,7 +113,7 @@ class DownloadManager extends Notifier<DownloadState> {
     _canceled.remove(chapter.id);
     _putTask(DownloadProgress(
       chapterId: chapter.id,
-      label: 'Chapter ${chapter.sortOrder}',
+      label: chapterName(chapter),
       total: pages.length,
       completed: done,
       status: DownloadStatus.queued,
@@ -126,6 +127,10 @@ class DownloadManager extends Notifier<DownloadState> {
         .read(databaseProvider)
         .chapterDao
         .getChaptersForManga(mangaId);
+    await enqueueChapters(chapters);
+  }
+
+  Future<void> enqueueChapters(List<ChapterRow> chapters) async {
     for (final chapter in chapters) {
       await enqueueChapter(chapter);
     }
