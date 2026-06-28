@@ -279,7 +279,10 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
             subtitle: _hasPrev
                 ? '${chapterName(_chapters[_chapterIndex - 1])}\nSwipe again to go back'
                 : null,
-            icon: _hasPrev ? Icons.arrow_back : Icons.first_page,
+            // Arrow points in the physical swipe direction.
+            icon: _hasPrev
+                ? (_reverse ? Icons.arrow_forward : Icons.arrow_back)
+                : Icons.first_page,
             onTap: _toggleOverlay,
           );
         }
@@ -289,7 +292,9 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
             subtitle: _hasNext
                 ? '${chapterName(_chapters[_chapterIndex + 1])}\nSwipe again to continue'
                 : null,
-            icon: _hasNext ? Icons.arrow_forward : Icons.done_all,
+            icon: _hasNext
+                ? (_reverse ? Icons.arrow_back : Icons.arrow_forward)
+                : Icons.done_all,
             onTap: _toggleOverlay,
           );
         }

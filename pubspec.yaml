@@ -1,7 +1,7 @@
 name: mango
 description: "A minimal, dark-mode, Android-first manga reader."
 publish_to: 'none'
-version: 2.0.0
+version: 2.1.0
 
 environment:
   sdk: ^3.9.2
@@ -28,6 +28,12 @@ dependencies:
 
   # Saving pages to the device gallery
   gal: ^2.3.0
+
+  # Sharing the exported library file
+  share_plus: ^10.0.0
+
+  # Picking a JSON file to import
+  file_picker: ^8.1.0
 
   # Models & serialization
   freezed_annotation: ^3.1.0

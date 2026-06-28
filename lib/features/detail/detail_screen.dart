@@ -13,6 +13,7 @@ import '../../data/services/download_manager.dart';
 import '../../shared/chapter_format.dart';
 import '../../shared/providers.dart';
 import '../../shared/reading_direction.dart';
+import '../reader/favorites_reader_screen.dart';
 import '../reader/reader_screen.dart';
 
 /// Manga detail: cover + read count, a resume/start button, and the chapter
@@ -305,6 +306,10 @@ class DetailScreen extends ConsumerWidget {
     final chapters = chaptersAsync.value ?? const <ChapterRow>[];
     final favoritePages =
         ref.watch(favoritePagesProvider(identifier)).value ?? const [];
+    final reverse = directionIsRtl(
+      manga?.readingDirection,
+      ref.watch(globalReadingDirectionProvider),
+    );
 
     final readCount = chapters.where((c) => c.isRead).length;
 
@@ -407,11 +412,18 @@ class DetailScreen extends ConsumerWidget {
             if (favoritePages.isNotEmpty)
               _FavoritePagesStrip(
                 views: favoritePages,
-                onOpen: (v) => _openReader(
-                  context,
-                  v.chapter,
-                  initialPage: v.favorite.pageIndex,
-                ),
+                onOpen: (v) {
+                  final idx = favoritePages.indexOf(v);
+                  Navigator.of(context).pushNamed(
+                    Routes.favoritesReader,
+                    arguments: FavoritesReaderArgs(
+                      mangaId: identifier,
+                      views: favoritePages,
+                      initialIndex: idx < 0 ? 0 : idx,
+                      reverse: reverse,
+                    ),
+                  );
+                },
                 onLongPress: (v) => _showFavoritePageMenu(context, ref, v),
               ),
             const Divider(height: 1),

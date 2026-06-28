@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:drift/drift.dart';
 
 import '../db/database.dart';
@@ -81,10 +83,109 @@ class MangaRepository {
         );
 
         await _reconcileChapters(ref);
+        await _applyProgress(ref);
+        await _applyFavoritePages(ref);
       }
     });
 
     return ImportResult(added: added, updated: updated);
+  }
+
+  /// Restores favorited pages from the imported document (idempotent — existing
+  /// favorites aren't duplicated).
+  Future<void> _applyFavoritePages(ReferenceManga ref) async {
+    for (final fav in ref.favoritePages) {
+      final chapter =
+          await _db.chapterDao.getBySource(ref.identifier, fav.chapter);
+      if (chapter == null) continue;
+      final maxIndex = chapter.pageCount > 0 ? chapter.pageCount - 1 : 0;
+      final pageIndex = (fav.page - 1).clamp(0, maxIndex);
+      await _db.favoritePageDao.add(ref.identifier, chapter.id, pageIndex);
+    }
+  }
+
+  /// Applies an optional resume marker from the imported document, mapping the
+  /// 1-based `page` to the internal 0-based index.
+  Future<void> _applyProgress(ReferenceManga ref) async {
+    final progress = ref.progress;
+    if (progress == null) return;
+    final chapter =
+        await _db.chapterDao.getBySource(ref.identifier, progress.chapter);
+    if (chapter == null) return;
+    final maxIndex = chapter.pageCount > 0 ? chapter.pageCount - 1 : 0;
+    final pageIndex = (progress.page - 1).clamp(0, maxIndex);
+    await _db.chapterDao.updateProgress(chapter.id, pageIndex);
+    await _db.mangaDao.touchLastRead(ref.identifier, chapter.id);
+
+    // Everything before the resume chapter is implicitly read.
+    final chapters = await _db.chapterDao.getChaptersForManga(ref.identifier);
+    for (final c in chapters) {
+      if (c.sortOrder < chapter.sortOrder && !c.isRead) {
+        final lastIndex = c.pageCount > 0 ? c.pageCount - 1 : 0;
+        await _db.chapterDao.updateProgress(c.id, lastIndex, isRead: true);
+      }
+    }
+  }
+
+  /// Builds an export document in the reference JSON format. When
+  /// [includeProgress] is true, each series with a saved resume position gets a
+  /// `progress` marker (chapter source id + 1-based page).
+  Future<String> exportLibraryJson({
+    required bool includeProgress,
+    required bool includeFavoritePages,
+  }) async {
+    final mangas = await _db.mangaDao.getAllManga();
+    final out = <Map<String, dynamic>>[];
+
+    for (final m in mangas) {
+      final chapters = await _db.chapterDao.getChaptersForManga(m.identifier);
+      final chapterById = {for (final c in chapters) c.id: c};
+      final chapterMaps = <Map<String, dynamic>>[];
+      for (final c in chapters) {
+        final pages = await _db.pageDao.getPagesForChapter(c.id);
+        chapterMaps.add({
+          'id': c.sourceChapterId,
+          'order': c.sortOrder,
+          if (c.title != null && c.title!.isNotEmpty) 'title': c.title,
+          'pages': pages.map((p) => p.url).toList(),
+        });
+      }
+
+      Map<String, dynamic>? progress;
+      if (includeProgress && m.lastReadChapterId != null) {
+        final resume = chapterById[m.lastReadChapterId];
+        if (resume != null) {
+          progress = {
+            'chapter': resume.sourceChapterId,
+            'page': (resume.lastPageRead ?? 0) + 1,
+          };
+        }
+      }
+
+      List<Map<String, dynamic>>? favoritePages;
+      if (includeFavoritePages) {
+        final favs = await _db.favoritePageDao.getForManga(m.identifier);
+        favoritePages = favs
+            .map((f) => {
+                  'chapter': chapterById[f.chapterId]?.sourceChapterId,
+                  'page': f.pageIndex + 1,
+                })
+            .where((e) => e['chapter'] != null)
+            .toList();
+      }
+
+      out.add({
+        'title': m.title,
+        'identifier': m.identifier,
+        'thumbnail': m.thumbnail,
+        if (progress != null) 'progress': progress,
+        if (favoritePages != null && favoritePages.isNotEmpty)
+          'favoritePages': favoritePages,
+        'chapters': chapterMaps,
+      });
+    }
+
+    return const JsonEncoder.withIndent('  ').convert(out);
   }
 
   Future<void> _reconcileChapters(ReferenceManga ref) async {

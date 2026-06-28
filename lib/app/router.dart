@@ -4,7 +4,9 @@ import '../features/detail/detail_screen.dart';
 import '../features/import/import_screen.dart';
 import '../features/library/library_screen.dart';
 import '../features/library/reorder_favorites_screen.dart';
+import '../features/reader/favorites_reader_screen.dart';
 import '../features/reader/reader_screen.dart';
+import '../features/settings/export_screen.dart';
 import '../features/settings/settings_screen.dart';
 
 /// Named routes for the app. Kept deliberately simple (built-in Navigator)
@@ -15,7 +17,9 @@ abstract class Routes {
   static const String detail = '/detail';
   static const String reader = '/reader';
   static const String reorderFavorites = '/favorites/reorder';
+  static const String favoritesReader = '/favorites/reader';
   static const String settings = '/settings';
+  static const String export = '/export';
 }
 
 class AppRouter {
@@ -50,9 +54,20 @@ class AppRouter {
           builder: (_) => const ReorderFavoritesScreen(),
           settings: settings,
         );
+      case Routes.favoritesReader:
+        final args = settings.arguments as FavoritesReaderArgs;
+        return MaterialPageRoute(
+          builder: (_) => FavoritesReaderScreen(args: args),
+          settings: settings,
+        );
       case Routes.settings:
         return MaterialPageRoute(
           builder: (_) => const SettingsScreen(),
+          settings: settings,
+        );
+      case Routes.export:
+        return MaterialPageRoute(
+          builder: (_) => const ExportScreen(),
           settings: settings,
         );
       default:

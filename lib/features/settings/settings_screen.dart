@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/router.dart';
 import '../../data/services/download_manager.dart';
 import '../../shared/providers.dart';
 import '../../shared/reading_direction.dart';
@@ -85,6 +86,14 @@ class SettingsScreen extends ConsumerWidget {
                 ),
               ],
             ),
+          ),
+          const Divider(),
+          const _SectionHeader('Library'),
+          ListTile(
+            leading: const Icon(Icons.ios_share),
+            title: const Text('Export library'),
+            subtitle: const Text('Save or share your library (and progress)'),
+            onTap: () => Navigator.of(context).pushNamed(Routes.export),
           ),
           const Divider(),
           const _SectionHeader('Storage'),

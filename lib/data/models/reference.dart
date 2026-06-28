@@ -13,11 +13,26 @@ abstract class ReferenceManga with _$ReferenceManga {
     required String title,
     required String identifier,
     required String thumbnail,
+    ReferenceProgress? progress,
+    @Default(<ReferenceProgress>[]) List<ReferenceProgress> favoritePages,
     @Default(<ReferenceChapter>[]) List<ReferenceChapter> chapters,
   }) = _ReferenceManga;
 
   factory ReferenceManga.fromJson(Map<String, dynamic> json) =>
       _$ReferenceMangaFromJson(json);
+}
+
+/// Optional resume marker: which chapter (by source id) and page (1-based) the
+/// reader was last on. Used to carry progress across devices on import/export.
+@freezed
+abstract class ReferenceProgress with _$ReferenceProgress {
+  const factory ReferenceProgress({
+    required String chapter,
+    @Default(1) int page,
+  }) = _ReferenceProgress;
+
+  factory ReferenceProgress.fromJson(Map<String, dynamic> json) =>
+      _$ReferenceProgressFromJson(json);
 }
 
 @freezed

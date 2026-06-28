@@ -56,6 +56,34 @@ void main() {
     expect(await db.pageDao.getPagesForChapter(chapters.single.id), hasLength(2));
   });
 
+  test('import applies an optional progress marker', () async {
+    const withProgress = '''
+[
+  {
+    "title": "WHA",
+    "identifier": "wha",
+    "thumbnail": "t",
+    "progress": { "chapter": "2", "page": 1 },
+    "chapters": [
+      { "id": "1", "order": 1, "pages": ["a1"] },
+      { "id": "2", "order": 2, "pages": ["b1", "b2", "b3"] }
+    ]
+  }
+]''';
+    await repo.import(parseReferenceJson(withProgress));
+
+    final manga = await db.mangaDao.getByIdentifier('wha');
+    final chapters = await db.chapterDao.getChaptersForManga('wha');
+    final ch1 = chapters.firstWhere((c) => c.sourceChapterId == '1');
+    final ch2 = chapters.firstWhere((c) => c.sourceChapterId == '2');
+
+    expect(manga!.lastReadChapterId, ch2.id, reason: 'resume chapter set');
+    expect(manga.lastReadAt != null, isTrue, reason: 'marked started');
+    expect(ch2.lastPageRead, 0, reason: '1-based page maps to 0-based index');
+    expect(ch2.isRead, isFalse, reason: 'resume chapter is mid-read');
+    expect(ch1.isRead, isTrue, reason: 'earlier chapters marked read');
+  });
+
   test('re-import updates metadata and preserves favorite + progress',
       () async {
     await repo.import(parseReferenceJson(_v1));

@@ -54,6 +54,9 @@ class FavoritePageDao extends DatabaseAccessor<AppDatabase>
         );
   }
 
+  Future<List<FavoritePageRow>> getForManga(String mangaId) =>
+      (select(favoritePageTable)..where((t) => t.mangaId.equals(mangaId))).get();
+
   Stream<bool> watchIsFavorite(int chapterId, int pageIndex) {
     return (select(favoritePageTable)
           ..where((t) =>

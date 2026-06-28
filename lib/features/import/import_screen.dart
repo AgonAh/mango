@@ -1,3 +1,7 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -48,6 +52,28 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
     }
   }
 
+  Future<void> _importFromFile() async {
+    final picked = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['json'],
+      withData: true,
+    );
+    if (picked == null || picked.files.isEmpty) return; // canceled
+    final file = picked.files.single;
+    final service = ref.read(jsonImportServiceProvider);
+    await _run(() async {
+      final String content;
+      if (file.path != null) {
+        content = await File(file.path!).readAsString();
+      } else if (file.bytes != null) {
+        content = utf8.decode(file.bytes!);
+      } else {
+        throw 'Could not read the selected file.';
+      }
+      return service.fromRaw(content);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final service = ref.read(jsonImportServiceProvider);
@@ -59,6 +85,26 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
+            Text('From a file', style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: 8),
+            FilledButton.icon(
+              onPressed: _busy ? null : _importFromFile,
+              icon: const Icon(Icons.upload_file_outlined),
+              label: const Text('Choose a .json file'),
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 24),
+              child: Row(
+                children: [
+                  Expanded(child: Divider()),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 12),
+                    child: Text('or'),
+                  ),
+                  Expanded(child: Divider()),
+                ],
+              ),
+            ),
             Text('From a URL', style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),
             TextField(

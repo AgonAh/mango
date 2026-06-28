@@ -6,18 +6,19 @@ Mango isn't a manga catalog or scraper — it doesn't fetch listings from any si
 
 ## What it does
 
-- **Import your library** from a JSON document — paste it directly or point Mango at a URL.
+- **Import your library** from a JSON document — pick a file, paste it, or point Mango at a URL.
 - **Browse** your manga as a cover grid, split into Favorites and Library sections.
 - **Track progress** automatically: which chapters you've read, and the exact page you stopped on mid-chapter. Resume picks up right where you left off.
 - **Read** with a horizontal paged reader: right-to-left by default (configurable), pinch / double-tap zoom, swipe between pages, and swipe past the edges to move between chapters.
 - **Download** chapters or whole series for offline reading, with a configurable, server-friendly download speed.
 - **Favorite and reorder** the series you care about; anything you've started automatically floats to the top.
-- **Favorite individual pages** and revisit them from a dedicated section on the series screen.
+- **Favorite individual pages** and browse through them from a dedicated section on the series screen.
 - **Save a page to your device gallery** straight from the reader.
+- **Export your library** (optionally with reading progress and favorite pages) to move to another device.
 
 ## How to use it
 
-1. **Add your library.** Tap the **+** button on the home screen. Either paste your JSON or enter a URL to a hosted JSON file, then import. Re-importing the same file later updates it in place (see *Updating* below).
+1. **Add your library.** Tap the **+** button on the home screen, then pick a `.json` file from your device, paste your JSON, or enter a URL to a hosted JSON file, and import. Re-importing the same file later updates it in place (see *Updating* below).
 2. **Open a series.** Tap a cover to see its chapters, how many you've read, and a **Continue / Start reading** button.
 3. **Read.**
    - Swipe to turn pages. Paging is **right-to-left by default**; change the global default in Settings, or override it per series from the detail screen's ⋮ menu → "Reading direction…".
@@ -26,8 +27,9 @@ Mango isn't a manga catalog or scraper — it doesn't fetch listings from any si
    - The reader's **⋮ menu** lets you favorite the current page, save it to your gallery, or download the current chapter.
    - At the **end of a chapter**, swipe past the last page to land on a "Next chapter" card. It won't switch automatically — swipe again to actually continue. The same applies going backwards (you'll land on the previous chapter's last page). This prevents an accidental over-swipe from jumping chapters.
 4. **Favorites & sorting.** Tap the ⭐ on a cover (or in the detail screen) to favorite it. Use the reorder button in the top bar to drag favorites into your preferred order. Non-favorites you've started reading are automatically sorted to the top.
-5. **Favorite pages.** Favorite a page from the reader's ⋮ menu; favorited pages appear in a "Favorite pages" strip at the top of that series' detail screen. Tap one to jump to it; long-press for a menu to open or remove it.
+5. **Favorite pages.** Favorite a page from the reader's ⋮ menu; favorited pages appear in a "Favorite pages" strip at the top of that series' detail screen. Tap one to browse through your favorite pages (a book button jumps into that chapter); long-press for a menu to open it in its chapter or remove it.
 6. **Mark read/unread.** Long-press a chapter for options to mark it read, or mark it unread (which also clears its saved page position).
+7. **Move to another device.** Settings → "Export library" produces a JSON document of your whole library, with optional toggles for reading progress and favorite pages. Copy it or share it as a file, then import it on the other device.
 
 ### Downloading for offline
 
@@ -46,6 +48,10 @@ The import document is a **JSON array of manga objects** (a single object is als
     "title": "Example manga",
     "identifier": "example-manga",
     "thumbnail": "https://example.com/example.webp",
+    "progress": { "chapter": "2", "page": 5 },
+    "favoritePages": [
+      { "chapter": "1", "page": 12 }
+    ],
     "chapters": [
       {
         "id": "1",
@@ -75,6 +81,8 @@ The import document is a **JSON array of manga objects** (a single object is als
 | `title` | manga | string | Display name shown in the library and detail screen. |
 | `identifier` | manga | string | **Stable unique key.** Drives new-vs-update on import — keep it constant for a series. |
 | `thumbnail` | manga | string (URL) | Cover image. |
+| `progress` | manga | object *(optional)* | Resume marker: `{ "chapter": "<id>", "page": <1-based> }`. On import, restores the resume position and marks earlier chapters read. |
+| `favoritePages` | manga | array *(optional)* | Favorited pages: `[{ "chapter": "<id>", "page": <1-based> }]`. |
 | `chapters` | manga | array | The chapters; order in the file doesn't matter (see `order`). |
 | `id` | chapter | string | **Stable per-chapter key** within the manga. Used to match chapters on re-import. |
 | `order` | chapter | integer | Sequence number; determines reading order and next/previous navigation. |
@@ -85,6 +93,7 @@ Notes:
 
 - Image URLs should be **HTTPS** (plain HTTP is blocked in release builds by default).
 - `identifier` and chapter `id` are how Mango recognises things across imports — keep them stable so progress, favorites, and downloads survive updates.
+- `progress` and `favoritePages` are optional and primarily produced by **Export library** (Settings) for moving devices; `page` numbers are **1-based**. They're applied on import but never required.
 - A sample document lives at [`reference.json`](reference.json) (also bundled at `assets/reference.json`).
 
 ### Updating an existing library
