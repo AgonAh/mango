@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../features/books/add_book_screen.dart';
+import '../features/books/book_detail_screen.dart';
+import '../features/books/book_reader_screen.dart';
 import '../features/detail/detail_screen.dart';
 import '../features/import/import_screen.dart';
 import '../features/library/library_screen.dart';
@@ -20,6 +23,9 @@ abstract class Routes {
   static const String favoritesReader = '/favorites/reader';
   static const String settings = '/settings';
   static const String export = '/export';
+  static const String addBook = '/book/add';
+  static const String bookDetail = '/book/detail';
+  static const String bookReader = '/book/reader';
 }
 
 class AppRouter {
@@ -68,6 +74,23 @@ class AppRouter {
       case Routes.export:
         return MaterialPageRoute(
           builder: (_) => const ExportScreen(),
+          settings: settings,
+        );
+      case Routes.addBook:
+        return MaterialPageRoute(
+          builder: (_) => const AddBookScreen(),
+          settings: settings,
+        );
+      case Routes.bookDetail:
+        final id = settings.arguments as int;
+        return MaterialPageRoute(
+          builder: (_) => BookDetailScreen(bookId: id),
+          settings: settings,
+        );
+      case Routes.bookReader:
+        final id = settings.arguments as int;
+        return MaterialPageRoute(
+          builder: (_) => BookReaderScreen(bookId: id),
           settings: settings,
         );
       default:

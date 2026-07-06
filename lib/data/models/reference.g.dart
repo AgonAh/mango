@@ -12,6 +12,10 @@ _ReferenceManga _$ReferenceMangaFromJson(
   title: json['title'] as String,
   identifier: json['identifier'] as String,
   thumbnail: json['thumbnail'] as String,
+  type: json['type'] as String?,
+  url: json['url'] as String?,
+  author: json['author'] as String?,
+  series: json['series'] as String?,
   progress: json['progress'] == null
       ? null
       : ReferenceProgress.fromJson(json['progress'] as Map<String, dynamic>),
@@ -32,6 +36,10 @@ Map<String, dynamic> _$ReferenceMangaToJson(_ReferenceManga instance) =>
       'title': instance.title,
       'identifier': instance.identifier,
       'thumbnail': instance.thumbnail,
+      'type': instance.type,
+      'url': instance.url,
+      'author': instance.author,
+      'series': instance.series,
       'progress': instance.progress,
       'favoritePages': instance.favoritePages,
       'chapters': instance.chapters,

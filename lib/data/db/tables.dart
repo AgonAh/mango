@@ -85,6 +85,48 @@ class PageTable extends Table {
       ];
 }
 
+/// A locally-imported PDF or EPUB book. Files are copied into app-private
+/// storage; [type] is 'pdf' or 'epub' and [readingMode] is 'scroll' or 'paged'.
+@DataClassName('BookRow')
+class BookTable extends Table {
+  @override
+  String get tableName => 'books';
+
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get title => text()();
+  TextColumn get author => text().nullable()();
+  TextColumn get series => text().nullable()();
+  TextColumn get type => text()(); // 'pdf' | 'epub'
+
+  /// Stable key for JSON-imported books (null for manually added ones).
+  TextColumn get identifier => text().nullable()();
+
+  /// Local copy of the file; empty until a JSON-imported book is downloaded.
+  TextColumn get filePath => text()();
+
+  /// Remote file URL for JSON-imported books (downloaded on first read).
+  TextColumn get sourceUrl => text().nullable()();
+  TextColumn get coverPath => text().nullable()();
+
+  /// Remote cover URL (JSON-imported books show this until a local cover set).
+  TextColumn get coverUrl => text().nullable()();
+  TextColumn get readingMode =>
+      text().withDefault(const Constant('scroll'))(); // 'scroll' | 'paged'
+
+  /// Resume position: page index for PDFs; [lastLocation] (EPUB CFI) for EPUBs.
+  IntColumn get lastPage => integer().withDefault(const Constant(0))();
+  TextColumn get lastLocation => text().nullable()();
+  IntColumn get pageCount => integer().nullable()();
+
+  BoolColumn get isFavorite => boolean().withDefault(const Constant(false))();
+  IntColumn get favoriteOrder => integer().nullable()();
+  DateTimeColumn get lastReadAt => dateTime().nullable()();
+  DateTimeColumn get createdAt =>
+      dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get updatedAt =>
+      dateTime().withDefault(currentDateAndTime)();
+}
+
 /// A user-favorited individual page, surfaced in its own section on the manga
 /// detail screen.
 @DataClassName('FavoritePageRow')

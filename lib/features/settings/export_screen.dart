@@ -23,6 +23,7 @@ class _ExportScreenState extends ConsumerState<ExportScreen> {
   bool _includeProgress = true;
   bool _includeFavoritePages = true;
   String? _json;
+  int _localBooksSkipped = 0;
   bool _loading = true;
 
   @override
@@ -33,13 +34,14 @@ class _ExportScreenState extends ConsumerState<ExportScreen> {
 
   Future<void> _rebuild() async {
     setState(() => _loading = true);
-    final json = await ref.read(mangaRepositoryProvider).exportLibraryJson(
+    final result = await ref.read(mangaRepositoryProvider).exportLibraryJson(
           includeProgress: _includeProgress,
           includeFavoritePages: _includeFavoritePages,
         );
     if (mounted) {
       setState(() {
-        _json = json;
+        _json = result.json;
+        _localBooksSkipped = result.localBooksSkipped;
         _loading = false;
       });
     }
@@ -107,6 +109,18 @@ class _ExportScreenState extends ConsumerState<ExportScreen> {
                     ),
               ),
             ),
+            if (_localBooksSkipped > 0)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
+                child: Text(
+                  '$_localBooksSkipped locally-added '
+                  '${_localBooksSkipped == 1 ? 'book' : 'books'} skipped '
+                  "(no shared source — can't move devices).",
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                ),
+              ),
             Expanded(
               child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 16),

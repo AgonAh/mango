@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/db/daos/favorite_page_dao.dart';
 import '../data/db/database.dart';
+import '../data/repositories/book_repository.dart';
 import '../data/repositories/download_repository.dart';
 import '../data/repositories/manga_repository.dart';
 import '../data/repositories/progress_repository.dart';
@@ -49,9 +50,38 @@ final downloadRepositoryProvider = Provider<DownloadRepository>(
 final downloadManagerProvider =
     NotifierProvider<DownloadManager, DownloadState>(DownloadManager.new);
 
+final bookRepositoryProvider = Provider<BookRepository>(
+  (ref) => BookRepository(ref.watch(databaseProvider), ref.watch(dioProvider)),
+);
+
 /// Reactive library list backed by the database.
 final mangaListProvider = StreamProvider<List<MangaRow>>(
   (ref) => ref.watch(mangaRepositoryProvider).watchLibrary(),
+);
+
+/// Reactive list of imported books.
+final bookListProvider = StreamProvider<List<BookRow>>(
+  (ref) => ref.watch(bookRepositoryProvider).watchBooks(),
+);
+
+/// Library grid filter (extendable to tags later).
+enum LibraryFilter { all, manga, books }
+
+class LibraryFilterController extends Notifier<LibraryFilter> {
+  @override
+  LibraryFilter build() => LibraryFilter.all;
+
+  void set(LibraryFilter filter) => state = filter;
+}
+
+final libraryFilterProvider =
+    NotifierProvider<LibraryFilterController, LibraryFilter>(
+  LibraryFilterController.new,
+);
+
+/// A single book (by id), kept live for the detail screen.
+final bookDetailProvider = StreamProvider.family<BookRow?, int>(
+  (ref, id) => ref.watch(databaseProvider).bookDao.watchById(id),
 );
 
 /// A single manga (by identifier), kept live for the detail screen.

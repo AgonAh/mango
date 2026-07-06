@@ -15,7 +15,9 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ReferenceManga {
 
- String get title; String get identifier; String get thumbnail; ReferenceProgress? get progress; List<ReferenceProgress> get favoritePages; List<ReferenceChapter> get chapters;
+ String get title; String get identifier; String get thumbnail;// When [type] is 'pdf' or 'epub', this is a book: [url] points at the file
+// (downloaded on first read). Absent [type] means a manga (uses chapters).
+ String? get type; String? get url; String? get author; String? get series; ReferenceProgress? get progress; List<ReferenceProgress> get favoritePages; List<ReferenceChapter> get chapters;
 /// Create a copy of ReferenceManga
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +30,16 @@ $ReferenceMangaCopyWith<ReferenceManga> get copyWith => _$ReferenceMangaCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReferenceManga&&(identical(other.title, title) || other.title == title)&&(identical(other.identifier, identifier) || other.identifier == identifier)&&(identical(other.thumbnail, thumbnail) || other.thumbnail == thumbnail)&&(identical(other.progress, progress) || other.progress == progress)&&const DeepCollectionEquality().equals(other.favoritePages, favoritePages)&&const DeepCollectionEquality().equals(other.chapters, chapters));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReferenceManga&&(identical(other.title, title) || other.title == title)&&(identical(other.identifier, identifier) || other.identifier == identifier)&&(identical(other.thumbnail, thumbnail) || other.thumbnail == thumbnail)&&(identical(other.type, type) || other.type == type)&&(identical(other.url, url) || other.url == url)&&(identical(other.author, author) || other.author == author)&&(identical(other.series, series) || other.series == series)&&(identical(other.progress, progress) || other.progress == progress)&&const DeepCollectionEquality().equals(other.favoritePages, favoritePages)&&const DeepCollectionEquality().equals(other.chapters, chapters));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,title,identifier,thumbnail,progress,const DeepCollectionEquality().hash(favoritePages),const DeepCollectionEquality().hash(chapters));
+int get hashCode => Object.hash(runtimeType,title,identifier,thumbnail,type,url,author,series,progress,const DeepCollectionEquality().hash(favoritePages),const DeepCollectionEquality().hash(chapters));
 
 @override
 String toString() {
-  return 'ReferenceManga(title: $title, identifier: $identifier, thumbnail: $thumbnail, progress: $progress, favoritePages: $favoritePages, chapters: $chapters)';
+  return 'ReferenceManga(title: $title, identifier: $identifier, thumbnail: $thumbnail, type: $type, url: $url, author: $author, series: $series, progress: $progress, favoritePages: $favoritePages, chapters: $chapters)';
 }
 
 
@@ -48,7 +50,7 @@ abstract mixin class $ReferenceMangaCopyWith<$Res>  {
   factory $ReferenceMangaCopyWith(ReferenceManga value, $Res Function(ReferenceManga) _then) = _$ReferenceMangaCopyWithImpl;
 @useResult
 $Res call({
- String title, String identifier, String thumbnail, ReferenceProgress? progress, List<ReferenceProgress> favoritePages, List<ReferenceChapter> chapters
+ String title, String identifier, String thumbnail, String? type, String? url, String? author, String? series, ReferenceProgress? progress, List<ReferenceProgress> favoritePages, List<ReferenceChapter> chapters
 });
 
 
@@ -65,12 +67,16 @@ class _$ReferenceMangaCopyWithImpl<$Res>
 
 /// Create a copy of ReferenceManga
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? title = null,Object? identifier = null,Object? thumbnail = null,Object? progress = freezed,Object? favoritePages = null,Object? chapters = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? title = null,Object? identifier = null,Object? thumbnail = null,Object? type = freezed,Object? url = freezed,Object? author = freezed,Object? series = freezed,Object? progress = freezed,Object? favoritePages = null,Object? chapters = null,}) {
   return _then(_self.copyWith(
 title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,identifier: null == identifier ? _self.identifier : identifier // ignore: cast_nullable_to_non_nullable
 as String,thumbnail: null == thumbnail ? _self.thumbnail : thumbnail // ignore: cast_nullable_to_non_nullable
-as String,progress: freezed == progress ? _self.progress : progress // ignore: cast_nullable_to_non_nullable
+as String,type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String?,url: freezed == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
+as String?,author: freezed == author ? _self.author : author // ignore: cast_nullable_to_non_nullable
+as String?,series: freezed == series ? _self.series : series // ignore: cast_nullable_to_non_nullable
+as String?,progress: freezed == progress ? _self.progress : progress // ignore: cast_nullable_to_non_nullable
 as ReferenceProgress?,favoritePages: null == favoritePages ? _self.favoritePages : favoritePages // ignore: cast_nullable_to_non_nullable
 as List<ReferenceProgress>,chapters: null == chapters ? _self.chapters : chapters // ignore: cast_nullable_to_non_nullable
 as List<ReferenceChapter>,
@@ -170,10 +176,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String title,  String identifier,  String thumbnail,  ReferenceProgress? progress,  List<ReferenceProgress> favoritePages,  List<ReferenceChapter> chapters)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String title,  String identifier,  String thumbnail,  String? type,  String? url,  String? author,  String? series,  ReferenceProgress? progress,  List<ReferenceProgress> favoritePages,  List<ReferenceChapter> chapters)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ReferenceManga() when $default != null:
-return $default(_that.title,_that.identifier,_that.thumbnail,_that.progress,_that.favoritePages,_that.chapters);case _:
+return $default(_that.title,_that.identifier,_that.thumbnail,_that.type,_that.url,_that.author,_that.series,_that.progress,_that.favoritePages,_that.chapters);case _:
   return orElse();
 
 }
@@ -191,10 +197,10 @@ return $default(_that.title,_that.identifier,_that.thumbnail,_that.progress,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String title,  String identifier,  String thumbnail,  ReferenceProgress? progress,  List<ReferenceProgress> favoritePages,  List<ReferenceChapter> chapters)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String title,  String identifier,  String thumbnail,  String? type,  String? url,  String? author,  String? series,  ReferenceProgress? progress,  List<ReferenceProgress> favoritePages,  List<ReferenceChapter> chapters)  $default,) {final _that = this;
 switch (_that) {
 case _ReferenceManga():
-return $default(_that.title,_that.identifier,_that.thumbnail,_that.progress,_that.favoritePages,_that.chapters);case _:
+return $default(_that.title,_that.identifier,_that.thumbnail,_that.type,_that.url,_that.author,_that.series,_that.progress,_that.favoritePages,_that.chapters);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -211,10 +217,10 @@ return $default(_that.title,_that.identifier,_that.thumbnail,_that.progress,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String title,  String identifier,  String thumbnail,  ReferenceProgress? progress,  List<ReferenceProgress> favoritePages,  List<ReferenceChapter> chapters)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String title,  String identifier,  String thumbnail,  String? type,  String? url,  String? author,  String? series,  ReferenceProgress? progress,  List<ReferenceProgress> favoritePages,  List<ReferenceChapter> chapters)?  $default,) {final _that = this;
 switch (_that) {
 case _ReferenceManga() when $default != null:
-return $default(_that.title,_that.identifier,_that.thumbnail,_that.progress,_that.favoritePages,_that.chapters);case _:
+return $default(_that.title,_that.identifier,_that.thumbnail,_that.type,_that.url,_that.author,_that.series,_that.progress,_that.favoritePages,_that.chapters);case _:
   return null;
 
 }
@@ -226,12 +232,18 @@ return $default(_that.title,_that.identifier,_that.thumbnail,_that.progress,_tha
 @JsonSerializable()
 
 class _ReferenceManga implements ReferenceManga {
-  const _ReferenceManga({required this.title, required this.identifier, required this.thumbnail, this.progress, final  List<ReferenceProgress> favoritePages = const <ReferenceProgress>[], final  List<ReferenceChapter> chapters = const <ReferenceChapter>[]}): _favoritePages = favoritePages,_chapters = chapters;
+  const _ReferenceManga({required this.title, required this.identifier, required this.thumbnail, this.type, this.url, this.author, this.series, this.progress, final  List<ReferenceProgress> favoritePages = const <ReferenceProgress>[], final  List<ReferenceChapter> chapters = const <ReferenceChapter>[]}): _favoritePages = favoritePages,_chapters = chapters;
   factory _ReferenceManga.fromJson(Map<String, dynamic> json) => _$ReferenceMangaFromJson(json);
 
 @override final  String title;
 @override final  String identifier;
 @override final  String thumbnail;
+// When [type] is 'pdf' or 'epub', this is a book: [url] points at the file
+// (downloaded on first read). Absent [type] means a manga (uses chapters).
+@override final  String? type;
+@override final  String? url;
+@override final  String? author;
+@override final  String? series;
 @override final  ReferenceProgress? progress;
  final  List<ReferenceProgress> _favoritePages;
 @override@JsonKey() List<ReferenceProgress> get favoritePages {
@@ -261,16 +273,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReferenceManga&&(identical(other.title, title) || other.title == title)&&(identical(other.identifier, identifier) || other.identifier == identifier)&&(identical(other.thumbnail, thumbnail) || other.thumbnail == thumbnail)&&(identical(other.progress, progress) || other.progress == progress)&&const DeepCollectionEquality().equals(other._favoritePages, _favoritePages)&&const DeepCollectionEquality().equals(other._chapters, _chapters));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReferenceManga&&(identical(other.title, title) || other.title == title)&&(identical(other.identifier, identifier) || other.identifier == identifier)&&(identical(other.thumbnail, thumbnail) || other.thumbnail == thumbnail)&&(identical(other.type, type) || other.type == type)&&(identical(other.url, url) || other.url == url)&&(identical(other.author, author) || other.author == author)&&(identical(other.series, series) || other.series == series)&&(identical(other.progress, progress) || other.progress == progress)&&const DeepCollectionEquality().equals(other._favoritePages, _favoritePages)&&const DeepCollectionEquality().equals(other._chapters, _chapters));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,title,identifier,thumbnail,progress,const DeepCollectionEquality().hash(_favoritePages),const DeepCollectionEquality().hash(_chapters));
+int get hashCode => Object.hash(runtimeType,title,identifier,thumbnail,type,url,author,series,progress,const DeepCollectionEquality().hash(_favoritePages),const DeepCollectionEquality().hash(_chapters));
 
 @override
 String toString() {
-  return 'ReferenceManga(title: $title, identifier: $identifier, thumbnail: $thumbnail, progress: $progress, favoritePages: $favoritePages, chapters: $chapters)';
+  return 'ReferenceManga(title: $title, identifier: $identifier, thumbnail: $thumbnail, type: $type, url: $url, author: $author, series: $series, progress: $progress, favoritePages: $favoritePages, chapters: $chapters)';
 }
 
 
@@ -281,7 +293,7 @@ abstract mixin class _$ReferenceMangaCopyWith<$Res> implements $ReferenceMangaCo
   factory _$ReferenceMangaCopyWith(_ReferenceManga value, $Res Function(_ReferenceManga) _then) = __$ReferenceMangaCopyWithImpl;
 @override @useResult
 $Res call({
- String title, String identifier, String thumbnail, ReferenceProgress? progress, List<ReferenceProgress> favoritePages, List<ReferenceChapter> chapters
+ String title, String identifier, String thumbnail, String? type, String? url, String? author, String? series, ReferenceProgress? progress, List<ReferenceProgress> favoritePages, List<ReferenceChapter> chapters
 });
 
 
@@ -298,12 +310,16 @@ class __$ReferenceMangaCopyWithImpl<$Res>
 
 /// Create a copy of ReferenceManga
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? title = null,Object? identifier = null,Object? thumbnail = null,Object? progress = freezed,Object? favoritePages = null,Object? chapters = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? title = null,Object? identifier = null,Object? thumbnail = null,Object? type = freezed,Object? url = freezed,Object? author = freezed,Object? series = freezed,Object? progress = freezed,Object? favoritePages = null,Object? chapters = null,}) {
   return _then(_ReferenceManga(
 title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,identifier: null == identifier ? _self.identifier : identifier // ignore: cast_nullable_to_non_nullable
 as String,thumbnail: null == thumbnail ? _self.thumbnail : thumbnail // ignore: cast_nullable_to_non_nullable
-as String,progress: freezed == progress ? _self.progress : progress // ignore: cast_nullable_to_non_nullable
+as String,type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String?,url: freezed == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
+as String?,author: freezed == author ? _self.author : author // ignore: cast_nullable_to_non_nullable
+as String?,series: freezed == series ? _self.series : series // ignore: cast_nullable_to_non_nullable
+as String?,progress: freezed == progress ? _self.progress : progress // ignore: cast_nullable_to_non_nullable
 as ReferenceProgress?,favoritePages: null == favoritePages ? _self._favoritePages : favoritePages // ignore: cast_nullable_to_non_nullable
 as List<ReferenceProgress>,chapters: null == chapters ? _self._chapters : chapters // ignore: cast_nullable_to_non_nullable
 as List<ReferenceChapter>,

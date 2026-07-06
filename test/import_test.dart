@@ -1,6 +1,8 @@
+import 'package:drift/drift.dart' show Value;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mango/data/db/database.dart';
+import 'package:mango/data/db/tables.dart';
 import 'package:mango/data/models/reference.dart';
 import 'package:mango/data/repositories/manga_repository.dart';
 
@@ -54,6 +56,60 @@ void main() {
         await db.chapterDao.getChaptersForManga('witch-hat-atelier');
     expect(chapters, hasLength(1));
     expect(await db.pageDao.getPagesForChapter(chapters.single.id), hasLength(2));
+  });
+
+  test('import creates a book from a typed reference object', () async {
+    const bookJson = '''
+[
+  {
+    "title": "Pride and Prejudice",
+    "identifier": "pp",
+    "thumbnail": "https://example.com/pp.jpg",
+    "type": "epub",
+    "url": "https://example.com/pp.epub",
+    "author": "Jane Austen",
+    "series": "Classics"
+  }
+]''';
+    final result = await repo.import(parseReferenceJson(bookJson));
+    expect(result.added, 1);
+
+    final book = await db.bookDao.getByIdentifier('pp');
+    expect(book, isNotNull);
+    expect(book!.type, 'epub');
+    expect(book.sourceUrl, 'https://example.com/pp.epub');
+    expect(book.coverUrl, 'https://example.com/pp.jpg');
+    expect(book.author, 'Jane Austen');
+    expect(book.filePath, '', reason: 'downloaded on first read');
+    expect(await db.mangaDao.getByIdentifier('pp'), isNull,
+        reason: 'a typed object is a book, not a manga');
+  });
+
+  test('export includes URL books and skips local-only books', () async {
+    // A URL-imported book (has a source URL).
+    const bookJson = '''
+[ { "title": "P&P", "identifier": "pp", "thumbnail": "https://x/c.jpg",
+    "type": "epub", "url": "https://x/pp.epub" } ]''';
+    await repo.import(parseReferenceJson(bookJson));
+
+    // A locally-added book (no source URL).
+    await db.bookDao.insertBook(
+      BookTableCompanion.insert(
+        title: 'Local Only',
+        type: 'pdf',
+        filePath: '/local/only.pdf',
+      ),
+    );
+
+    final result = await repo.exportLibraryJson(
+      includeProgress: false,
+      includeFavoritePages: false,
+    );
+
+    expect(result.localBooksSkipped, 1);
+    expect(result.json.contains('https://x/pp.epub'), isTrue);
+    expect(result.json.contains('"type": "epub"'), isTrue);
+    expect(result.json.contains('Local Only'), isFalse);
   });
 
   test('import applies an optional progress marker', () async {

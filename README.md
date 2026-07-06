@@ -1,25 +1,29 @@
 # Mango 🥭
 
-A minimal, dark-mode, Android-first manga reader built in Flutter.
+A minimal, dark-mode, Android-first manga **and book** reader built in Flutter.
 
-Mango isn't a manga catalog or scraper — it doesn't fetch listings from any site. You bring your own library as a JSON file (pasted in or hosted at a URL), and Mango stores it locally, tracks your reading progress, and lets you read online or download chapters for offline reading. It's a personal-use reader: clean, fast, and built around a single source of truth you control.
+Mango isn't a catalog or scraper — it doesn't fetch listings from any site. You bring your own library: manga as a JSON document (pasted in, from a file, or hosted at a URL), and PDF/EPUB books from your device (or referenced by URL in that same JSON). Mango stores everything locally, tracks your reading position, and lets you read online or download for offline reading. It's a personal-use reader: clean, fast, and built around a single source of truth you control.
 
 ## What it does
 
-- **Import your library** from a JSON document — pick a file, paste it, or point Mango at a URL.
-- **Browse** your manga as a cover grid, split into Favorites and Library sections.
+- **Import your manga** from a JSON document — pick a file, paste it, or point Mango at a URL.
+- **Add PDF & EPUB books** from your device (or via a URL in the JSON), stored right alongside your manga.
+- **Browse** everything as one cover grid, split into Favorites and Library sections, with an All / Manga / Books filter and a PDF/EPUB badge on books.
 - **Track progress** automatically: which chapters you've read, and the exact page you stopped on mid-chapter. Resume picks up right where you left off.
 - **Read** with a horizontal paged reader: right-to-left by default (configurable), pinch / double-tap zoom, swipe between pages, and swipe past the edges to move between chapters.
 - **Download** chapters or whole series for offline reading, with a configurable, server-friendly download speed.
 - **Favorite and reorder** the series you care about; anything you've started automatically floats to the top.
 - **Favorite individual pages** and browse through them from a dedicated section on the series screen.
 - **Save a page to your device gallery** straight from the reader.
+- **Read PDFs** in continuous-scroll (pinch-zoom) or paged mode, and **EPUBs** as free-flowing scroll with chapters and adjustable font size — both remember your position.
 - **Export your library** (optionally with reading progress and favorite pages) to move to another device.
 
 ## How to use it
 
-1. **Add your library.** Tap the **+** button on the home screen, then pick a `.json` file from your device, paste your JSON, or enter a URL to a hosted JSON file, and import. Re-importing the same file later updates it in place (see *Updating* below).
-2. **Open a series.** Tap a cover to see its chapters, how many you've read, and a **Continue / Start reading** button.
+1. **Add to your library.** Tap the **+** button on the home screen and choose:
+   - **Import manga (JSON)** — pick a `.json` file, paste JSON, or enter a URL. Re-importing the same document updates it in place (see *Updating* below).
+   - **Add book (PDF / EPUB)** — pick a file from your device; Mango suggests a title/author/cover, which you can edit before saving.
+2. **Open an item.** Tap a cover. A manga shows its chapters + a **Continue / Start reading** button; a book shows its metadata + a **Read / Continue** button (and edit/delete).
 3. **Read.**
    - Swipe to turn pages. Paging is **right-to-left by default**; change the global default in Settings, or override it per series from the detail screen's ⋮ menu → "Reading direction…".
    - **Pinch** to zoom; **double-tap** to toggle between fit and 1.5× (centred on where you tapped). While zoomed in, dragging pans the image instead of turning the page.
@@ -29,7 +33,14 @@ Mango isn't a manga catalog or scraper — it doesn't fetch listings from any si
 4. **Favorites & sorting.** Tap the ⭐ on a cover (or in the detail screen) to favorite it. Use the reorder button in the top bar to drag favorites into your preferred order. Non-favorites you've started reading are automatically sorted to the top.
 5. **Favorite pages.** Favorite a page from the reader's ⋮ menu; favorited pages appear in a "Favorite pages" strip at the top of that series' detail screen. Tap one to browse through your favorite pages (a book button jumps into that chapter); long-press for a menu to open it in its chapter or remove it.
 6. **Mark read/unread.** Long-press a chapter for options to mark it read, or mark it unread (which also clears its saved page position).
-7. **Move to another device.** Settings → "Export library" produces a JSON document of your whole library, with optional toggles for reading progress and favorite pages. Copy it or share it as a file, then import it on the other device.
+7. **Move to another device.** Settings → "Export library" produces a JSON document of your whole library, with optional toggles for reading progress and favorite pages. Copy it or share it as a file, then import it on the other device. Manga and **URL-based books** are included; **locally-added books** (from a device file) are skipped, since their file can't move with the JSON — the export screen tells you how many were left out.
+
+### Books (PDF / EPUB)
+
+- Books live in the same library as manga (with a PDF/EPUB badge) and share favorites, sorting, and the All/Manga/Books filter.
+- **PDF** opens in continuous scroll (pinch-zoom) or paged mode — chosen per book when you add it — and remembers your page.
+- **EPUB** opens as one free-flowing scroll with a chapters button (⋮/book icon), A−/A+ font-size controls, and a dark theme; it remembers your position precisely (even across font changes).
+- Files are copied into the app's private storage. Deleting a book removes its file too.
 
 ### Downloading for offline
 
@@ -40,7 +51,7 @@ Mango isn't a manga catalog or scraper — it doesn't fetch listings from any si
 
 ## JSON format
 
-The import document is a **JSON array of manga objects** (a single object is also accepted). Each manga has a stable `identifier`, display fields, and an ordered list of chapters; each chapter has an ordered list of page image URLs.
+The import document is a **JSON array of objects** (a single object is also accepted). An object is a **manga** by default (with an ordered list of chapters, each holding page image URLs), or a **book** when it has a `"type"` of `"pdf"` or `"epub"` (pointing at a file URL instead of chapters).
 
 ```json
 [
@@ -74,13 +85,33 @@ The import document is a **JSON array of manga objects** (a single object is als
 ]
 ```
 
+A **book** object looks like this (no `chapters`; `type` + `url` make it a book):
+
+```json
+{
+  "title": "Pride and Prejudice",
+  "identifier": "pride-and-prejudice",
+  "thumbnail": "https://example.com/pride-cover.jpg",
+  "type": "epub",
+  "url": "https://example.com/pride.epub",
+  "author": "Jane Austen",
+  "series": "Classics"
+}
+```
+
+The book's file downloads on first read (then behaves like a locally added book); the cover comes from `thumbnail`.
+
 ### Fields
 
 | Field | Where | Type | Notes |
 |---|---|---|---|
-| `title` | manga | string | Display name shown in the library and detail screen. |
-| `identifier` | manga | string | **Stable unique key.** Drives new-vs-update on import — keep it constant for a series. |
-| `thumbnail` | manga | string (URL) | Cover image. |
+| `title` | manga / book | string | Display name shown in the library and detail screen. |
+| `type` | book | `"pdf"` \| `"epub"` *(optional)* | Marks the object as a book. Absent = manga. |
+| `url` | book | string (URL) | The PDF/EPUB file; downloaded on first read. |
+| `author` | book | string *(optional)* | Shown on the book's detail screen. |
+| `series` | book | string *(optional)* | Series/tag label. |
+| `identifier` | manga / book | string | **Stable unique key.** Drives new-vs-update on import — keep it constant. |
+| `thumbnail` | manga / book | string (URL) | Cover image. |
 | `progress` | manga | object *(optional)* | Resume marker: `{ "chapter": "<id>", "page": <1-based> }`. On import, restores the resume position and marks earlier chapters read. |
 | `favoritePages` | manga | array *(optional)* | Favorited pages: `[{ "chapter": "<id>", "page": <1-based> }]`. |
 | `chapters` | manga | array | The chapters; order in the file doesn't matter (see `order`). |

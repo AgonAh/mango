@@ -3,11 +3,15 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart'
+    hide DownloadProgress;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gal/gal.dart';
 
 import '../../app/router.dart';
 import '../../data/db/daos/favorite_page_dao.dart';
 import '../../shared/chapter_format.dart';
+import '../../shared/providers.dart';
 import 'reader_screen.dart';
 import 'zoomable_page.dart';
 
@@ -83,6 +87,88 @@ class _FavoritesReaderScreenState
     );
   }
 
+  void _notify(String message) {
+    if (mounted) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(message)));
+    }
+  }
+
+  Future<void> _savePageToGallery() async {
+    final page = _views[_index].page;
+    try {
+      final local = page.localPath;
+      final String path;
+      if (local != null && local.isNotEmpty && File(local).existsSync()) {
+        path = local;
+      } else {
+        final file = await DefaultCacheManager().getSingleFile(page.url);
+        path = file.path;
+      }
+      if (!await Gal.hasAccess()) {
+        final granted = await Gal.requestAccess();
+        if (!granted) {
+          _notify('Gallery access denied');
+          return;
+        }
+      }
+      await Gal.putImage(path, album: 'Mango');
+      _notify('Saved to gallery');
+    } on GalException catch (e) {
+      _notify('Could not save: ${e.type.message}');
+    } catch (_) {
+      _notify('Could not save page');
+    }
+  }
+
+  void _downloadChapter() {
+    final chapter = _views[_index].chapter;
+    ref.read(downloadManagerProvider.notifier).enqueueChapter(chapter);
+    _notify('Downloading ${chapterName(chapter)}');
+  }
+
+  Widget _buildMenu() {
+    return PopupMenuButton<String>(
+      icon: const Icon(Icons.more_vert, color: Colors.white),
+      onSelected: (value) {
+        switch (value) {
+          case 'read':
+            _openInChapter();
+          case 'save':
+            _savePageToGallery();
+          case 'download':
+            _downloadChapter();
+        }
+      },
+      itemBuilder: (_) => const [
+        PopupMenuItem(
+          value: 'read',
+          child: Row(children: [
+            Icon(Icons.menu_book_outlined),
+            SizedBox(width: 12),
+            Text('Read this chapter'),
+          ]),
+        ),
+        PopupMenuItem(
+          value: 'save',
+          child: Row(children: [
+            Icon(Icons.save_alt),
+            SizedBox(width: 12),
+            Text('Save page to gallery'),
+          ]),
+        ),
+        PopupMenuItem(
+          value: 'download',
+          child: Row(children: [
+            Icon(Icons.download_outlined),
+            SizedBox(width: 12),
+            Text('Download this chapter'),
+          ]),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final lockPaging = _isZoomed || _pointerCount >= 2;
@@ -150,11 +236,7 @@ class _FavoritesReaderScreenState
                         '${_index + 1} / ${_views.length}',
                         style: const TextStyle(color: Colors.white70),
                       ),
-                      IconButton(
-                        tooltip: 'Read this chapter',
-                        icon: const Icon(Icons.menu_book, color: Colors.white),
-                        onPressed: _openInChapter,
-                      ),
+                      _buildMenu(),
                     ],
                   ),
                 ),

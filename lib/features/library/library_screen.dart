@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/router.dart';
-import '../../data/db/database.dart';
 import '../../shared/providers.dart';
+import 'library_card.dart';
+import 'library_entry.dart';
 import 'library_sort.dart';
-import 'manga_card.dart';
 
-/// The library home: imported manga as a cover grid, split into a Favorites
-/// section and a Library section (started series sorted to the top).
+/// The library home: imported manga and books as a unified cover grid, split
+/// into a Favorites section and a Library section (started items to the top).
 class LibraryScreen extends ConsumerWidget {
   const LibraryScreen({super.key});
 
@@ -19,11 +19,57 @@ class LibraryScreen extends ConsumerWidget {
     crossAxisSpacing: 12,
   );
 
+  void _showAddMenu(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (sheetContext) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.collections_bookmark_outlined),
+              title: const Text('Import manga (JSON)'),
+              onTap: () {
+                Navigator.of(sheetContext).pop();
+                Navigator.of(context).pushNamed(Routes.import);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.picture_as_pdf_outlined),
+              title: const Text('Add book (PDF / EPUB)'),
+              onTap: () {
+                Navigator.of(sheetContext).pop();
+                Navigator.of(context).pushNamed(Routes.addBook);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final library = ref.watch(mangaListProvider);
-    final hasFavorites =
-        (library.value ?? const []).any((m) => m.isFavorite);
+    final mangaAsync = ref.watch(mangaListProvider);
+    final booksAsync = ref.watch(bookListProvider);
+
+    final allEntries = <LibraryEntry>[
+      ...?mangaAsync.value?.map(LibraryEntry.manga),
+      ...?booksAsync.value?.map(LibraryEntry.book),
+    ];
+    final filter = ref.watch(libraryFilterProvider);
+    final entries = allEntries.where((e) {
+      switch (filter) {
+        case LibraryFilter.all:
+          return true;
+        case LibraryFilter.manga:
+          return e.kind == LibraryKind.manga;
+        case LibraryFilter.books:
+          return e.kind == LibraryKind.book;
+      }
+    }).toList();
+    final hasFavorites = entries.any((e) => e.isFavorite);
+    final loading = mangaAsync.isLoading || booksAsync.isLoading;
 
     return Scaffold(
       appBar: AppBar(
@@ -44,37 +90,58 @@ class LibraryScreen extends ConsumerWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.of(context).pushNamed(Routes.import),
+        onPressed: () => _showAddMenu(context),
         child: const Icon(Icons.add),
       ),
-      body: library.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Error: $e')),
-        data: (all) {
-          if (all.isEmpty) return const _EmptyState();
-          final groups = groupLibrary(all);
-          return CustomScrollView(
-            slivers: [
-              if (groups.favorites.isNotEmpty) ...[
-                const _SectionHeader('Favorites'),
-                _grid(context, ref, groups.favorites),
-              ],
-              if (groups.others.isNotEmpty) ...[
-                const _SectionHeader('Library'),
-                _grid(context, ref, groups.others),
-              ],
-              const SliverToBoxAdapter(child: SizedBox(height: 88)),
-            ],
-          );
-        },
+      body: Column(
+        children: [
+          if (allEntries.isNotEmpty) _FilterBar(filter: filter),
+          Expanded(child: _content(context, ref, entries, allEntries, loading)),
+        ],
       ),
+    );
+  }
+
+  Widget _content(
+    BuildContext context,
+    WidgetRef ref,
+    List<LibraryEntry> entries,
+    List<LibraryEntry> allEntries,
+    bool loading,
+  ) {
+    if (allEntries.isEmpty) {
+      return loading
+          ? const Center(child: CircularProgressIndicator())
+          : const _EmptyState();
+    }
+    if (entries.isEmpty) {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.all(24),
+          child: Text('Nothing here for this filter.'),
+        ),
+      );
+    }
+    final groups = groupLibrary(entries);
+    return CustomScrollView(
+      slivers: [
+        if (groups.favorites.isNotEmpty) ...[
+          const _SectionHeader('Favorites'),
+          _grid(context, ref, groups.favorites),
+        ],
+        if (groups.others.isNotEmpty) ...[
+          const _SectionHeader('Library'),
+          _grid(context, ref, groups.others),
+        ],
+        const SliverToBoxAdapter(child: SizedBox(height: 88)),
+      ],
     );
   }
 
   SliverPadding _grid(
     BuildContext context,
     WidgetRef ref,
-    List<MangaRow> items,
+    List<LibraryEntry> items,
   ) {
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -82,19 +149,31 @@ class LibraryScreen extends ConsumerWidget {
         gridDelegate: _gridDelegate,
         itemCount: items.length,
         itemBuilder: (context, i) {
-          final manga = items[i];
-          return MangaCard(
-            manga: manga,
-            onTap: () => Navigator.of(context).pushNamed(
-              Routes.detail,
-              arguments: manga.identifier,
-            ),
-            onToggleFavorite: () =>
-                ref.read(mangaRepositoryProvider).toggleFavorite(manga),
+          final entry = items[i];
+          return LibraryCard(
+            entry: entry,
+            onTap: () => _open(context, entry),
+            onToggleFavorite: () => _toggleFavorite(ref, entry),
           );
         },
       ),
     );
+  }
+
+  void _open(BuildContext context, LibraryEntry entry) {
+    if (entry.kind == LibraryKind.manga) {
+      Navigator.of(context).pushNamed(Routes.detail, arguments: entry.mangaId);
+    } else {
+      Navigator.of(context).pushNamed(Routes.bookDetail, arguments: entry.bookId);
+    }
+  }
+
+  void _toggleFavorite(WidgetRef ref, LibraryEntry entry) {
+    if (entry.kind == LibraryKind.manga) {
+      ref.read(mangaRepositoryProvider).toggleFavoriteByIdentifier(entry.mangaId!);
+    } else {
+      ref.read(bookRepositoryProvider).toggleFavoriteById(entry.bookId!);
+    }
   }
 }
 
@@ -119,6 +198,32 @@ class _SectionHeader extends StatelessWidget {
   }
 }
 
+class _FilterBar extends ConsumerWidget {
+  const _FilterBar({required this.filter});
+  final LibraryFilter filter;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 8, 12, 0),
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: SegmentedButton<LibraryFilter>(
+          segments: const [
+            ButtonSegment(value: LibraryFilter.all, label: Text('All')),
+            ButtonSegment(value: LibraryFilter.manga, label: Text('Manga')),
+            ButtonSegment(value: LibraryFilter.books, label: Text('Books')),
+          ],
+          selected: {filter},
+          showSelectedIcon: false,
+          onSelectionChanged: (s) =>
+              ref.read(libraryFilterProvider.notifier).set(s.first),
+        ),
+      ),
+    );
+  }
+}
+
 class _EmptyState extends StatelessWidget {
   const _EmptyState();
 
@@ -128,7 +233,7 @@ class _EmptyState extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.all(24),
         child: Text(
-          'No manga yet.\nTap + to import a reference.',
+          'Nothing here yet.\nTap + to import manga or add a book.',
           textAlign: TextAlign.center,
         ),
       ),

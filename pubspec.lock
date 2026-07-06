@@ -25,6 +25,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.1.10"
+  archive:
+    dependency: transitive
+    description:
+      name: archive
+      sha256: cb6a278ef2dbb298455e1a713bda08524a175630ec643a242c399c932a0a1f7d
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.6.1"
   args:
     dependency: transitive
     description:
@@ -233,6 +241,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.7"
+  csslib:
+    dependency: transitive
+    description:
+      name: csslib
+      sha256: "09bad715f418841f976c77db72d5398dc1253c21fb9c0c7f0b0b985860b2d58e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2"
   dart_style:
     dependency: transitive
     description:
@@ -273,6 +289,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.29.0"
+  epubx:
+    dependency: "direct main"
+    description:
+      name: epubx
+      sha256: "0ab9354efa177c4be52c46f857bc15bf83f83a92667fb673465c8f89fca26db3"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.0"
+  extension:
+    dependency: transitive
+    description:
+      name: extension
+      sha256: be3a6b7f8adad2f6e2e8c63c895d19811fcf203e23466c6296267941d0ff4f24
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.6.0"
   fake_async:
     dependency: transitive
     description:
@@ -360,6 +392,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_widget_from_html_core:
+    dependency: "direct main"
+    description:
+      name: flutter_widget_from_html_core
+      sha256: "50990ec287434a280ed15d602aa3bf6e8db9c54159762d906057a04e9493b91a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.16.1"
   freezed:
     dependency: "direct dev"
     description:
@@ -408,6 +448,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.2"
+  html:
+    dependency: "direct main"
+    description:
+      name: html
+      sha256: "6d1264f2dffa1b1101c25a91dff0dc2daee4c18e87cd8538729773c073dbf602"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.15.6"
   http:
     dependency: transitive
     description:
@@ -432,6 +480,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.2"
+  image:
+    dependency: "direct main"
+    description:
+      name: image
+      sha256: "8e9d133755c3e84c73288363e6343157c383a0c6c56fc51afcc5d4d7180306d6"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.3.0"
   io:
     dependency: transitive
     description:
@@ -640,6 +696,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.0"
+  pdfx:
+    dependency: "direct main"
+    description:
+      name: pdfx
+      sha256: "29db9b71d46bf2335e001f91693f2c3fbbf0760e4c2eb596bf4bafab211471c1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.9.2"
+  petitparser:
+    dependency: transitive
+    description:
+      name: petitparser
+      sha256: "91bd59303e9f769f108f8df05e371341b15d59e995e6806aefab827b58336675"
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.0.2"
   photo_view:
     dependency: "direct main"
     description:
@@ -688,6 +760,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.0"
+  quiver:
+    dependency: transitive
+    description:
+      name: quiver
+      sha256: ea0b925899e64ecdfbf9c7becb60d5b50e706ade44a85b2363be2a22d88117d2
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.2"
   recase:
     dependency: transitive
     description:
@@ -736,6 +816,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.28.0"
+  scrollable_positioned_list:
+    dependency: "direct main"
+    description:
+      name: scrollable_positioned_list
+      sha256: "1b54d5f1329a1e263269abc9e2543d90806131aa14fe7c6062a8054d57249287"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.8"
   share_plus:
     dependency: "direct main"
     description:
@@ -989,6 +1077,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.0"
+  universal_platform:
+    dependency: transitive
+    description:
+      name: universal_platform
+      sha256: "64e16458a0ea9b99260ceb5467a214c1f298d647c659af1bff6d3bf82536b1ec"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   url_launcher_linux:
     dependency: transitive
     description:
@@ -1101,6 +1197,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
+  xml:
+    dependency: transitive
+    description:
+      name: xml
+      sha256: "971043b3a0d3da28727e40ed3e0b5d18b742fa5a68665cca88e74b7876d5e025"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.6.1"
   yaml:
     dependency: transitive
     description:

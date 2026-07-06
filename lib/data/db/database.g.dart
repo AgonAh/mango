@@ -2003,6 +2003,1067 @@ class FavoritePageTableCompanion extends UpdateCompanion<FavoritePageRow> {
   }
 }
 
+class $BookTableTable extends BookTable
+    with TableInfo<$BookTableTable, BookRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $BookTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+    'title',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _authorMeta = const VerificationMeta('author');
+  @override
+  late final GeneratedColumn<String> author = GeneratedColumn<String>(
+    'author',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _seriesMeta = const VerificationMeta('series');
+  @override
+  late final GeneratedColumn<String> series = GeneratedColumn<String>(
+    'series',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _typeMeta = const VerificationMeta('type');
+  @override
+  late final GeneratedColumn<String> type = GeneratedColumn<String>(
+    'type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _identifierMeta = const VerificationMeta(
+    'identifier',
+  );
+  @override
+  late final GeneratedColumn<String> identifier = GeneratedColumn<String>(
+    'identifier',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _filePathMeta = const VerificationMeta(
+    'filePath',
+  );
+  @override
+  late final GeneratedColumn<String> filePath = GeneratedColumn<String>(
+    'file_path',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _sourceUrlMeta = const VerificationMeta(
+    'sourceUrl',
+  );
+  @override
+  late final GeneratedColumn<String> sourceUrl = GeneratedColumn<String>(
+    'source_url',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _coverPathMeta = const VerificationMeta(
+    'coverPath',
+  );
+  @override
+  late final GeneratedColumn<String> coverPath = GeneratedColumn<String>(
+    'cover_path',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _coverUrlMeta = const VerificationMeta(
+    'coverUrl',
+  );
+  @override
+  late final GeneratedColumn<String> coverUrl = GeneratedColumn<String>(
+    'cover_url',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _readingModeMeta = const VerificationMeta(
+    'readingMode',
+  );
+  @override
+  late final GeneratedColumn<String> readingMode = GeneratedColumn<String>(
+    'reading_mode',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('scroll'),
+  );
+  static const VerificationMeta _lastPageMeta = const VerificationMeta(
+    'lastPage',
+  );
+  @override
+  late final GeneratedColumn<int> lastPage = GeneratedColumn<int>(
+    'last_page',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _lastLocationMeta = const VerificationMeta(
+    'lastLocation',
+  );
+  @override
+  late final GeneratedColumn<String> lastLocation = GeneratedColumn<String>(
+    'last_location',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _pageCountMeta = const VerificationMeta(
+    'pageCount',
+  );
+  @override
+  late final GeneratedColumn<int> pageCount = GeneratedColumn<int>(
+    'page_count',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _isFavoriteMeta = const VerificationMeta(
+    'isFavorite',
+  );
+  @override
+  late final GeneratedColumn<bool> isFavorite = GeneratedColumn<bool>(
+    'is_favorite',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_favorite" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _favoriteOrderMeta = const VerificationMeta(
+    'favoriteOrder',
+  );
+  @override
+  late final GeneratedColumn<int> favoriteOrder = GeneratedColumn<int>(
+    'favorite_order',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _lastReadAtMeta = const VerificationMeta(
+    'lastReadAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> lastReadAt = GeneratedColumn<DateTime>(
+    'last_read_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    title,
+    author,
+    series,
+    type,
+    identifier,
+    filePath,
+    sourceUrl,
+    coverPath,
+    coverUrl,
+    readingMode,
+    lastPage,
+    lastLocation,
+    pageCount,
+    isFavorite,
+    favoriteOrder,
+    lastReadAt,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'books';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<BookRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+        _titleMeta,
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('author')) {
+      context.handle(
+        _authorMeta,
+        author.isAcceptableOrUnknown(data['author']!, _authorMeta),
+      );
+    }
+    if (data.containsKey('series')) {
+      context.handle(
+        _seriesMeta,
+        series.isAcceptableOrUnknown(data['series']!, _seriesMeta),
+      );
+    }
+    if (data.containsKey('type')) {
+      context.handle(
+        _typeMeta,
+        type.isAcceptableOrUnknown(data['type']!, _typeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_typeMeta);
+    }
+    if (data.containsKey('identifier')) {
+      context.handle(
+        _identifierMeta,
+        identifier.isAcceptableOrUnknown(data['identifier']!, _identifierMeta),
+      );
+    }
+    if (data.containsKey('file_path')) {
+      context.handle(
+        _filePathMeta,
+        filePath.isAcceptableOrUnknown(data['file_path']!, _filePathMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_filePathMeta);
+    }
+    if (data.containsKey('source_url')) {
+      context.handle(
+        _sourceUrlMeta,
+        sourceUrl.isAcceptableOrUnknown(data['source_url']!, _sourceUrlMeta),
+      );
+    }
+    if (data.containsKey('cover_path')) {
+      context.handle(
+        _coverPathMeta,
+        coverPath.isAcceptableOrUnknown(data['cover_path']!, _coverPathMeta),
+      );
+    }
+    if (data.containsKey('cover_url')) {
+      context.handle(
+        _coverUrlMeta,
+        coverUrl.isAcceptableOrUnknown(data['cover_url']!, _coverUrlMeta),
+      );
+    }
+    if (data.containsKey('reading_mode')) {
+      context.handle(
+        _readingModeMeta,
+        readingMode.isAcceptableOrUnknown(
+          data['reading_mode']!,
+          _readingModeMeta,
+        ),
+      );
+    }
+    if (data.containsKey('last_page')) {
+      context.handle(
+        _lastPageMeta,
+        lastPage.isAcceptableOrUnknown(data['last_page']!, _lastPageMeta),
+      );
+    }
+    if (data.containsKey('last_location')) {
+      context.handle(
+        _lastLocationMeta,
+        lastLocation.isAcceptableOrUnknown(
+          data['last_location']!,
+          _lastLocationMeta,
+        ),
+      );
+    }
+    if (data.containsKey('page_count')) {
+      context.handle(
+        _pageCountMeta,
+        pageCount.isAcceptableOrUnknown(data['page_count']!, _pageCountMeta),
+      );
+    }
+    if (data.containsKey('is_favorite')) {
+      context.handle(
+        _isFavoriteMeta,
+        isFavorite.isAcceptableOrUnknown(data['is_favorite']!, _isFavoriteMeta),
+      );
+    }
+    if (data.containsKey('favorite_order')) {
+      context.handle(
+        _favoriteOrderMeta,
+        favoriteOrder.isAcceptableOrUnknown(
+          data['favorite_order']!,
+          _favoriteOrderMeta,
+        ),
+      );
+    }
+    if (data.containsKey('last_read_at')) {
+      context.handle(
+        _lastReadAtMeta,
+        lastReadAt.isAcceptableOrUnknown(
+          data['last_read_at']!,
+          _lastReadAtMeta,
+        ),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  BookRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return BookRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      )!,
+      author: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}author'],
+      ),
+      series: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}series'],
+      ),
+      type: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}type'],
+      )!,
+      identifier: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}identifier'],
+      ),
+      filePath: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}file_path'],
+      )!,
+      sourceUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}source_url'],
+      ),
+      coverPath: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}cover_path'],
+      ),
+      coverUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}cover_url'],
+      ),
+      readingMode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}reading_mode'],
+      )!,
+      lastPage: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}last_page'],
+      )!,
+      lastLocation: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}last_location'],
+      ),
+      pageCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}page_count'],
+      ),
+      isFavorite: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_favorite'],
+      )!,
+      favoriteOrder: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}favorite_order'],
+      ),
+      lastReadAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_read_at'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $BookTableTable createAlias(String alias) {
+    return $BookTableTable(attachedDatabase, alias);
+  }
+}
+
+class BookRow extends DataClass implements Insertable<BookRow> {
+  final int id;
+  final String title;
+  final String? author;
+  final String? series;
+  final String type;
+
+  /// Stable key for JSON-imported books (null for manually added ones).
+  final String? identifier;
+
+  /// Local copy of the file; empty until a JSON-imported book is downloaded.
+  final String filePath;
+
+  /// Remote file URL for JSON-imported books (downloaded on first read).
+  final String? sourceUrl;
+  final String? coverPath;
+
+  /// Remote cover URL (JSON-imported books show this until a local cover set).
+  final String? coverUrl;
+  final String readingMode;
+
+  /// Resume position: page index for PDFs; [lastLocation] (EPUB CFI) for EPUBs.
+  final int lastPage;
+  final String? lastLocation;
+  final int? pageCount;
+  final bool isFavorite;
+  final int? favoriteOrder;
+  final DateTime? lastReadAt;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const BookRow({
+    required this.id,
+    required this.title,
+    this.author,
+    this.series,
+    required this.type,
+    this.identifier,
+    required this.filePath,
+    this.sourceUrl,
+    this.coverPath,
+    this.coverUrl,
+    required this.readingMode,
+    required this.lastPage,
+    this.lastLocation,
+    this.pageCount,
+    required this.isFavorite,
+    this.favoriteOrder,
+    this.lastReadAt,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['title'] = Variable<String>(title);
+    if (!nullToAbsent || author != null) {
+      map['author'] = Variable<String>(author);
+    }
+    if (!nullToAbsent || series != null) {
+      map['series'] = Variable<String>(series);
+    }
+    map['type'] = Variable<String>(type);
+    if (!nullToAbsent || identifier != null) {
+      map['identifier'] = Variable<String>(identifier);
+    }
+    map['file_path'] = Variable<String>(filePath);
+    if (!nullToAbsent || sourceUrl != null) {
+      map['source_url'] = Variable<String>(sourceUrl);
+    }
+    if (!nullToAbsent || coverPath != null) {
+      map['cover_path'] = Variable<String>(coverPath);
+    }
+    if (!nullToAbsent || coverUrl != null) {
+      map['cover_url'] = Variable<String>(coverUrl);
+    }
+    map['reading_mode'] = Variable<String>(readingMode);
+    map['last_page'] = Variable<int>(lastPage);
+    if (!nullToAbsent || lastLocation != null) {
+      map['last_location'] = Variable<String>(lastLocation);
+    }
+    if (!nullToAbsent || pageCount != null) {
+      map['page_count'] = Variable<int>(pageCount);
+    }
+    map['is_favorite'] = Variable<bool>(isFavorite);
+    if (!nullToAbsent || favoriteOrder != null) {
+      map['favorite_order'] = Variable<int>(favoriteOrder);
+    }
+    if (!nullToAbsent || lastReadAt != null) {
+      map['last_read_at'] = Variable<DateTime>(lastReadAt);
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  BookTableCompanion toCompanion(bool nullToAbsent) {
+    return BookTableCompanion(
+      id: Value(id),
+      title: Value(title),
+      author: author == null && nullToAbsent
+          ? const Value.absent()
+          : Value(author),
+      series: series == null && nullToAbsent
+          ? const Value.absent()
+          : Value(series),
+      type: Value(type),
+      identifier: identifier == null && nullToAbsent
+          ? const Value.absent()
+          : Value(identifier),
+      filePath: Value(filePath),
+      sourceUrl: sourceUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(sourceUrl),
+      coverPath: coverPath == null && nullToAbsent
+          ? const Value.absent()
+          : Value(coverPath),
+      coverUrl: coverUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(coverUrl),
+      readingMode: Value(readingMode),
+      lastPage: Value(lastPage),
+      lastLocation: lastLocation == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastLocation),
+      pageCount: pageCount == null && nullToAbsent
+          ? const Value.absent()
+          : Value(pageCount),
+      isFavorite: Value(isFavorite),
+      favoriteOrder: favoriteOrder == null && nullToAbsent
+          ? const Value.absent()
+          : Value(favoriteOrder),
+      lastReadAt: lastReadAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastReadAt),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory BookRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return BookRow(
+      id: serializer.fromJson<int>(json['id']),
+      title: serializer.fromJson<String>(json['title']),
+      author: serializer.fromJson<String?>(json['author']),
+      series: serializer.fromJson<String?>(json['series']),
+      type: serializer.fromJson<String>(json['type']),
+      identifier: serializer.fromJson<String?>(json['identifier']),
+      filePath: serializer.fromJson<String>(json['filePath']),
+      sourceUrl: serializer.fromJson<String?>(json['sourceUrl']),
+      coverPath: serializer.fromJson<String?>(json['coverPath']),
+      coverUrl: serializer.fromJson<String?>(json['coverUrl']),
+      readingMode: serializer.fromJson<String>(json['readingMode']),
+      lastPage: serializer.fromJson<int>(json['lastPage']),
+      lastLocation: serializer.fromJson<String?>(json['lastLocation']),
+      pageCount: serializer.fromJson<int?>(json['pageCount']),
+      isFavorite: serializer.fromJson<bool>(json['isFavorite']),
+      favoriteOrder: serializer.fromJson<int?>(json['favoriteOrder']),
+      lastReadAt: serializer.fromJson<DateTime?>(json['lastReadAt']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'title': serializer.toJson<String>(title),
+      'author': serializer.toJson<String?>(author),
+      'series': serializer.toJson<String?>(series),
+      'type': serializer.toJson<String>(type),
+      'identifier': serializer.toJson<String?>(identifier),
+      'filePath': serializer.toJson<String>(filePath),
+      'sourceUrl': serializer.toJson<String?>(sourceUrl),
+      'coverPath': serializer.toJson<String?>(coverPath),
+      'coverUrl': serializer.toJson<String?>(coverUrl),
+      'readingMode': serializer.toJson<String>(readingMode),
+      'lastPage': serializer.toJson<int>(lastPage),
+      'lastLocation': serializer.toJson<String?>(lastLocation),
+      'pageCount': serializer.toJson<int?>(pageCount),
+      'isFavorite': serializer.toJson<bool>(isFavorite),
+      'favoriteOrder': serializer.toJson<int?>(favoriteOrder),
+      'lastReadAt': serializer.toJson<DateTime?>(lastReadAt),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  BookRow copyWith({
+    int? id,
+    String? title,
+    Value<String?> author = const Value.absent(),
+    Value<String?> series = const Value.absent(),
+    String? type,
+    Value<String?> identifier = const Value.absent(),
+    String? filePath,
+    Value<String?> sourceUrl = const Value.absent(),
+    Value<String?> coverPath = const Value.absent(),
+    Value<String?> coverUrl = const Value.absent(),
+    String? readingMode,
+    int? lastPage,
+    Value<String?> lastLocation = const Value.absent(),
+    Value<int?> pageCount = const Value.absent(),
+    bool? isFavorite,
+    Value<int?> favoriteOrder = const Value.absent(),
+    Value<DateTime?> lastReadAt = const Value.absent(),
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => BookRow(
+    id: id ?? this.id,
+    title: title ?? this.title,
+    author: author.present ? author.value : this.author,
+    series: series.present ? series.value : this.series,
+    type: type ?? this.type,
+    identifier: identifier.present ? identifier.value : this.identifier,
+    filePath: filePath ?? this.filePath,
+    sourceUrl: sourceUrl.present ? sourceUrl.value : this.sourceUrl,
+    coverPath: coverPath.present ? coverPath.value : this.coverPath,
+    coverUrl: coverUrl.present ? coverUrl.value : this.coverUrl,
+    readingMode: readingMode ?? this.readingMode,
+    lastPage: lastPage ?? this.lastPage,
+    lastLocation: lastLocation.present ? lastLocation.value : this.lastLocation,
+    pageCount: pageCount.present ? pageCount.value : this.pageCount,
+    isFavorite: isFavorite ?? this.isFavorite,
+    favoriteOrder: favoriteOrder.present
+        ? favoriteOrder.value
+        : this.favoriteOrder,
+    lastReadAt: lastReadAt.present ? lastReadAt.value : this.lastReadAt,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  BookRow copyWithCompanion(BookTableCompanion data) {
+    return BookRow(
+      id: data.id.present ? data.id.value : this.id,
+      title: data.title.present ? data.title.value : this.title,
+      author: data.author.present ? data.author.value : this.author,
+      series: data.series.present ? data.series.value : this.series,
+      type: data.type.present ? data.type.value : this.type,
+      identifier: data.identifier.present
+          ? data.identifier.value
+          : this.identifier,
+      filePath: data.filePath.present ? data.filePath.value : this.filePath,
+      sourceUrl: data.sourceUrl.present ? data.sourceUrl.value : this.sourceUrl,
+      coverPath: data.coverPath.present ? data.coverPath.value : this.coverPath,
+      coverUrl: data.coverUrl.present ? data.coverUrl.value : this.coverUrl,
+      readingMode: data.readingMode.present
+          ? data.readingMode.value
+          : this.readingMode,
+      lastPage: data.lastPage.present ? data.lastPage.value : this.lastPage,
+      lastLocation: data.lastLocation.present
+          ? data.lastLocation.value
+          : this.lastLocation,
+      pageCount: data.pageCount.present ? data.pageCount.value : this.pageCount,
+      isFavorite: data.isFavorite.present
+          ? data.isFavorite.value
+          : this.isFavorite,
+      favoriteOrder: data.favoriteOrder.present
+          ? data.favoriteOrder.value
+          : this.favoriteOrder,
+      lastReadAt: data.lastReadAt.present
+          ? data.lastReadAt.value
+          : this.lastReadAt,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('BookRow(')
+          ..write('id: $id, ')
+          ..write('title: $title, ')
+          ..write('author: $author, ')
+          ..write('series: $series, ')
+          ..write('type: $type, ')
+          ..write('identifier: $identifier, ')
+          ..write('filePath: $filePath, ')
+          ..write('sourceUrl: $sourceUrl, ')
+          ..write('coverPath: $coverPath, ')
+          ..write('coverUrl: $coverUrl, ')
+          ..write('readingMode: $readingMode, ')
+          ..write('lastPage: $lastPage, ')
+          ..write('lastLocation: $lastLocation, ')
+          ..write('pageCount: $pageCount, ')
+          ..write('isFavorite: $isFavorite, ')
+          ..write('favoriteOrder: $favoriteOrder, ')
+          ..write('lastReadAt: $lastReadAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    title,
+    author,
+    series,
+    type,
+    identifier,
+    filePath,
+    sourceUrl,
+    coverPath,
+    coverUrl,
+    readingMode,
+    lastPage,
+    lastLocation,
+    pageCount,
+    isFavorite,
+    favoriteOrder,
+    lastReadAt,
+    createdAt,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is BookRow &&
+          other.id == this.id &&
+          other.title == this.title &&
+          other.author == this.author &&
+          other.series == this.series &&
+          other.type == this.type &&
+          other.identifier == this.identifier &&
+          other.filePath == this.filePath &&
+          other.sourceUrl == this.sourceUrl &&
+          other.coverPath == this.coverPath &&
+          other.coverUrl == this.coverUrl &&
+          other.readingMode == this.readingMode &&
+          other.lastPage == this.lastPage &&
+          other.lastLocation == this.lastLocation &&
+          other.pageCount == this.pageCount &&
+          other.isFavorite == this.isFavorite &&
+          other.favoriteOrder == this.favoriteOrder &&
+          other.lastReadAt == this.lastReadAt &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class BookTableCompanion extends UpdateCompanion<BookRow> {
+  final Value<int> id;
+  final Value<String> title;
+  final Value<String?> author;
+  final Value<String?> series;
+  final Value<String> type;
+  final Value<String?> identifier;
+  final Value<String> filePath;
+  final Value<String?> sourceUrl;
+  final Value<String?> coverPath;
+  final Value<String?> coverUrl;
+  final Value<String> readingMode;
+  final Value<int> lastPage;
+  final Value<String?> lastLocation;
+  final Value<int?> pageCount;
+  final Value<bool> isFavorite;
+  final Value<int?> favoriteOrder;
+  final Value<DateTime?> lastReadAt;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  const BookTableCompanion({
+    this.id = const Value.absent(),
+    this.title = const Value.absent(),
+    this.author = const Value.absent(),
+    this.series = const Value.absent(),
+    this.type = const Value.absent(),
+    this.identifier = const Value.absent(),
+    this.filePath = const Value.absent(),
+    this.sourceUrl = const Value.absent(),
+    this.coverPath = const Value.absent(),
+    this.coverUrl = const Value.absent(),
+    this.readingMode = const Value.absent(),
+    this.lastPage = const Value.absent(),
+    this.lastLocation = const Value.absent(),
+    this.pageCount = const Value.absent(),
+    this.isFavorite = const Value.absent(),
+    this.favoriteOrder = const Value.absent(),
+    this.lastReadAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  BookTableCompanion.insert({
+    this.id = const Value.absent(),
+    required String title,
+    this.author = const Value.absent(),
+    this.series = const Value.absent(),
+    required String type,
+    this.identifier = const Value.absent(),
+    required String filePath,
+    this.sourceUrl = const Value.absent(),
+    this.coverPath = const Value.absent(),
+    this.coverUrl = const Value.absent(),
+    this.readingMode = const Value.absent(),
+    this.lastPage = const Value.absent(),
+    this.lastLocation = const Value.absent(),
+    this.pageCount = const Value.absent(),
+    this.isFavorite = const Value.absent(),
+    this.favoriteOrder = const Value.absent(),
+    this.lastReadAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  }) : title = Value(title),
+       type = Value(type),
+       filePath = Value(filePath);
+  static Insertable<BookRow> custom({
+    Expression<int>? id,
+    Expression<String>? title,
+    Expression<String>? author,
+    Expression<String>? series,
+    Expression<String>? type,
+    Expression<String>? identifier,
+    Expression<String>? filePath,
+    Expression<String>? sourceUrl,
+    Expression<String>? coverPath,
+    Expression<String>? coverUrl,
+    Expression<String>? readingMode,
+    Expression<int>? lastPage,
+    Expression<String>? lastLocation,
+    Expression<int>? pageCount,
+    Expression<bool>? isFavorite,
+    Expression<int>? favoriteOrder,
+    Expression<DateTime>? lastReadAt,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (title != null) 'title': title,
+      if (author != null) 'author': author,
+      if (series != null) 'series': series,
+      if (type != null) 'type': type,
+      if (identifier != null) 'identifier': identifier,
+      if (filePath != null) 'file_path': filePath,
+      if (sourceUrl != null) 'source_url': sourceUrl,
+      if (coverPath != null) 'cover_path': coverPath,
+      if (coverUrl != null) 'cover_url': coverUrl,
+      if (readingMode != null) 'reading_mode': readingMode,
+      if (lastPage != null) 'last_page': lastPage,
+      if (lastLocation != null) 'last_location': lastLocation,
+      if (pageCount != null) 'page_count': pageCount,
+      if (isFavorite != null) 'is_favorite': isFavorite,
+      if (favoriteOrder != null) 'favorite_order': favoriteOrder,
+      if (lastReadAt != null) 'last_read_at': lastReadAt,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+    });
+  }
+
+  BookTableCompanion copyWith({
+    Value<int>? id,
+    Value<String>? title,
+    Value<String?>? author,
+    Value<String?>? series,
+    Value<String>? type,
+    Value<String?>? identifier,
+    Value<String>? filePath,
+    Value<String?>? sourceUrl,
+    Value<String?>? coverPath,
+    Value<String?>? coverUrl,
+    Value<String>? readingMode,
+    Value<int>? lastPage,
+    Value<String?>? lastLocation,
+    Value<int?>? pageCount,
+    Value<bool>? isFavorite,
+    Value<int?>? favoriteOrder,
+    Value<DateTime?>? lastReadAt,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+  }) {
+    return BookTableCompanion(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      author: author ?? this.author,
+      series: series ?? this.series,
+      type: type ?? this.type,
+      identifier: identifier ?? this.identifier,
+      filePath: filePath ?? this.filePath,
+      sourceUrl: sourceUrl ?? this.sourceUrl,
+      coverPath: coverPath ?? this.coverPath,
+      coverUrl: coverUrl ?? this.coverUrl,
+      readingMode: readingMode ?? this.readingMode,
+      lastPage: lastPage ?? this.lastPage,
+      lastLocation: lastLocation ?? this.lastLocation,
+      pageCount: pageCount ?? this.pageCount,
+      isFavorite: isFavorite ?? this.isFavorite,
+      favoriteOrder: favoriteOrder ?? this.favoriteOrder,
+      lastReadAt: lastReadAt ?? this.lastReadAt,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (author.present) {
+      map['author'] = Variable<String>(author.value);
+    }
+    if (series.present) {
+      map['series'] = Variable<String>(series.value);
+    }
+    if (type.present) {
+      map['type'] = Variable<String>(type.value);
+    }
+    if (identifier.present) {
+      map['identifier'] = Variable<String>(identifier.value);
+    }
+    if (filePath.present) {
+      map['file_path'] = Variable<String>(filePath.value);
+    }
+    if (sourceUrl.present) {
+      map['source_url'] = Variable<String>(sourceUrl.value);
+    }
+    if (coverPath.present) {
+      map['cover_path'] = Variable<String>(coverPath.value);
+    }
+    if (coverUrl.present) {
+      map['cover_url'] = Variable<String>(coverUrl.value);
+    }
+    if (readingMode.present) {
+      map['reading_mode'] = Variable<String>(readingMode.value);
+    }
+    if (lastPage.present) {
+      map['last_page'] = Variable<int>(lastPage.value);
+    }
+    if (lastLocation.present) {
+      map['last_location'] = Variable<String>(lastLocation.value);
+    }
+    if (pageCount.present) {
+      map['page_count'] = Variable<int>(pageCount.value);
+    }
+    if (isFavorite.present) {
+      map['is_favorite'] = Variable<bool>(isFavorite.value);
+    }
+    if (favoriteOrder.present) {
+      map['favorite_order'] = Variable<int>(favoriteOrder.value);
+    }
+    if (lastReadAt.present) {
+      map['last_read_at'] = Variable<DateTime>(lastReadAt.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('BookTableCompanion(')
+          ..write('id: $id, ')
+          ..write('title: $title, ')
+          ..write('author: $author, ')
+          ..write('series: $series, ')
+          ..write('type: $type, ')
+          ..write('identifier: $identifier, ')
+          ..write('filePath: $filePath, ')
+          ..write('sourceUrl: $sourceUrl, ')
+          ..write('coverPath: $coverPath, ')
+          ..write('coverUrl: $coverUrl, ')
+          ..write('readingMode: $readingMode, ')
+          ..write('lastPage: $lastPage, ')
+          ..write('lastLocation: $lastLocation, ')
+          ..write('pageCount: $pageCount, ')
+          ..write('isFavorite: $isFavorite, ')
+          ..write('favoriteOrder: $favoriteOrder, ')
+          ..write('lastReadAt: $lastReadAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -2011,12 +3072,14 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $PageTableTable pageTable = $PageTableTable(this);
   late final $FavoritePageTableTable favoritePageTable =
       $FavoritePageTableTable(this);
+  late final $BookTableTable bookTable = $BookTableTable(this);
   late final MangaDao mangaDao = MangaDao(this as AppDatabase);
   late final ChapterDao chapterDao = ChapterDao(this as AppDatabase);
   late final PageDao pageDao = PageDao(this as AppDatabase);
   late final FavoritePageDao favoritePageDao = FavoritePageDao(
     this as AppDatabase,
   );
+  late final BookDao bookDao = BookDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -2026,6 +3089,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     chapterTable,
     pageTable,
     favoritePageTable,
+    bookTable,
   ];
 }
 
@@ -3913,6 +4977,472 @@ typedef $$FavoritePageTableTableProcessedTableManager =
       FavoritePageRow,
       PrefetchHooks Function({bool mangaId, bool chapterId})
     >;
+typedef $$BookTableTableCreateCompanionBuilder =
+    BookTableCompanion Function({
+      Value<int> id,
+      required String title,
+      Value<String?> author,
+      Value<String?> series,
+      required String type,
+      Value<String?> identifier,
+      required String filePath,
+      Value<String?> sourceUrl,
+      Value<String?> coverPath,
+      Value<String?> coverUrl,
+      Value<String> readingMode,
+      Value<int> lastPage,
+      Value<String?> lastLocation,
+      Value<int?> pageCount,
+      Value<bool> isFavorite,
+      Value<int?> favoriteOrder,
+      Value<DateTime?> lastReadAt,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+    });
+typedef $$BookTableTableUpdateCompanionBuilder =
+    BookTableCompanion Function({
+      Value<int> id,
+      Value<String> title,
+      Value<String?> author,
+      Value<String?> series,
+      Value<String> type,
+      Value<String?> identifier,
+      Value<String> filePath,
+      Value<String?> sourceUrl,
+      Value<String?> coverPath,
+      Value<String?> coverUrl,
+      Value<String> readingMode,
+      Value<int> lastPage,
+      Value<String?> lastLocation,
+      Value<int?> pageCount,
+      Value<bool> isFavorite,
+      Value<int?> favoriteOrder,
+      Value<DateTime?> lastReadAt,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+    });
+
+class $$BookTableTableFilterComposer
+    extends Composer<_$AppDatabase, $BookTableTable> {
+  $$BookTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get author => $composableBuilder(
+    column: $table.author,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get series => $composableBuilder(
+    column: $table.series,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get type => $composableBuilder(
+    column: $table.type,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get identifier => $composableBuilder(
+    column: $table.identifier,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get filePath => $composableBuilder(
+    column: $table.filePath,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sourceUrl => $composableBuilder(
+    column: $table.sourceUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get coverPath => $composableBuilder(
+    column: $table.coverPath,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get coverUrl => $composableBuilder(
+    column: $table.coverUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get readingMode => $composableBuilder(
+    column: $table.readingMode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get lastPage => $composableBuilder(
+    column: $table.lastPage,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get lastLocation => $composableBuilder(
+    column: $table.lastLocation,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get pageCount => $composableBuilder(
+    column: $table.pageCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isFavorite => $composableBuilder(
+    column: $table.isFavorite,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get favoriteOrder => $composableBuilder(
+    column: $table.favoriteOrder,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get lastReadAt => $composableBuilder(
+    column: $table.lastReadAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$BookTableTableOrderingComposer
+    extends Composer<_$AppDatabase, $BookTableTable> {
+  $$BookTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get author => $composableBuilder(
+    column: $table.author,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get series => $composableBuilder(
+    column: $table.series,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get type => $composableBuilder(
+    column: $table.type,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get identifier => $composableBuilder(
+    column: $table.identifier,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get filePath => $composableBuilder(
+    column: $table.filePath,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sourceUrl => $composableBuilder(
+    column: $table.sourceUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get coverPath => $composableBuilder(
+    column: $table.coverPath,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get coverUrl => $composableBuilder(
+    column: $table.coverUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get readingMode => $composableBuilder(
+    column: $table.readingMode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get lastPage => $composableBuilder(
+    column: $table.lastPage,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get lastLocation => $composableBuilder(
+    column: $table.lastLocation,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get pageCount => $composableBuilder(
+    column: $table.pageCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isFavorite => $composableBuilder(
+    column: $table.isFavorite,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get favoriteOrder => $composableBuilder(
+    column: $table.favoriteOrder,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get lastReadAt => $composableBuilder(
+    column: $table.lastReadAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$BookTableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $BookTableTable> {
+  $$BookTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<String> get author =>
+      $composableBuilder(column: $table.author, builder: (column) => column);
+
+  GeneratedColumn<String> get series =>
+      $composableBuilder(column: $table.series, builder: (column) => column);
+
+  GeneratedColumn<String> get type =>
+      $composableBuilder(column: $table.type, builder: (column) => column);
+
+  GeneratedColumn<String> get identifier => $composableBuilder(
+    column: $table.identifier,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get filePath =>
+      $composableBuilder(column: $table.filePath, builder: (column) => column);
+
+  GeneratedColumn<String> get sourceUrl =>
+      $composableBuilder(column: $table.sourceUrl, builder: (column) => column);
+
+  GeneratedColumn<String> get coverPath =>
+      $composableBuilder(column: $table.coverPath, builder: (column) => column);
+
+  GeneratedColumn<String> get coverUrl =>
+      $composableBuilder(column: $table.coverUrl, builder: (column) => column);
+
+  GeneratedColumn<String> get readingMode => $composableBuilder(
+    column: $table.readingMode,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get lastPage =>
+      $composableBuilder(column: $table.lastPage, builder: (column) => column);
+
+  GeneratedColumn<String> get lastLocation => $composableBuilder(
+    column: $table.lastLocation,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get pageCount =>
+      $composableBuilder(column: $table.pageCount, builder: (column) => column);
+
+  GeneratedColumn<bool> get isFavorite => $composableBuilder(
+    column: $table.isFavorite,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get favoriteOrder => $composableBuilder(
+    column: $table.favoriteOrder,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get lastReadAt => $composableBuilder(
+    column: $table.lastReadAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$BookTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $BookTableTable,
+          BookRow,
+          $$BookTableTableFilterComposer,
+          $$BookTableTableOrderingComposer,
+          $$BookTableTableAnnotationComposer,
+          $$BookTableTableCreateCompanionBuilder,
+          $$BookTableTableUpdateCompanionBuilder,
+          (BookRow, BaseReferences<_$AppDatabase, $BookTableTable, BookRow>),
+          BookRow,
+          PrefetchHooks Function()
+        > {
+  $$BookTableTableTableManager(_$AppDatabase db, $BookTableTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$BookTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$BookTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$BookTableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> title = const Value.absent(),
+                Value<String?> author = const Value.absent(),
+                Value<String?> series = const Value.absent(),
+                Value<String> type = const Value.absent(),
+                Value<String?> identifier = const Value.absent(),
+                Value<String> filePath = const Value.absent(),
+                Value<String?> sourceUrl = const Value.absent(),
+                Value<String?> coverPath = const Value.absent(),
+                Value<String?> coverUrl = const Value.absent(),
+                Value<String> readingMode = const Value.absent(),
+                Value<int> lastPage = const Value.absent(),
+                Value<String?> lastLocation = const Value.absent(),
+                Value<int?> pageCount = const Value.absent(),
+                Value<bool> isFavorite = const Value.absent(),
+                Value<int?> favoriteOrder = const Value.absent(),
+                Value<DateTime?> lastReadAt = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => BookTableCompanion(
+                id: id,
+                title: title,
+                author: author,
+                series: series,
+                type: type,
+                identifier: identifier,
+                filePath: filePath,
+                sourceUrl: sourceUrl,
+                coverPath: coverPath,
+                coverUrl: coverUrl,
+                readingMode: readingMode,
+                lastPage: lastPage,
+                lastLocation: lastLocation,
+                pageCount: pageCount,
+                isFavorite: isFavorite,
+                favoriteOrder: favoriteOrder,
+                lastReadAt: lastReadAt,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String title,
+                Value<String?> author = const Value.absent(),
+                Value<String?> series = const Value.absent(),
+                required String type,
+                Value<String?> identifier = const Value.absent(),
+                required String filePath,
+                Value<String?> sourceUrl = const Value.absent(),
+                Value<String?> coverPath = const Value.absent(),
+                Value<String?> coverUrl = const Value.absent(),
+                Value<String> readingMode = const Value.absent(),
+                Value<int> lastPage = const Value.absent(),
+                Value<String?> lastLocation = const Value.absent(),
+                Value<int?> pageCount = const Value.absent(),
+                Value<bool> isFavorite = const Value.absent(),
+                Value<int?> favoriteOrder = const Value.absent(),
+                Value<DateTime?> lastReadAt = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => BookTableCompanion.insert(
+                id: id,
+                title: title,
+                author: author,
+                series: series,
+                type: type,
+                identifier: identifier,
+                filePath: filePath,
+                sourceUrl: sourceUrl,
+                coverPath: coverPath,
+                coverUrl: coverUrl,
+                readingMode: readingMode,
+                lastPage: lastPage,
+                lastLocation: lastLocation,
+                pageCount: pageCount,
+                isFavorite: isFavorite,
+                favoriteOrder: favoriteOrder,
+                lastReadAt: lastReadAt,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$BookTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $BookTableTable,
+      BookRow,
+      $$BookTableTableFilterComposer,
+      $$BookTableTableOrderingComposer,
+      $$BookTableTableAnnotationComposer,
+      $$BookTableTableCreateCompanionBuilder,
+      $$BookTableTableUpdateCompanionBuilder,
+      (BookRow, BaseReferences<_$AppDatabase, $BookTableTable, BookRow>),
+      BookRow,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -3925,4 +5455,6 @@ class $AppDatabaseManager {
       $$PageTableTableTableManager(_db, _db.pageTable);
   $$FavoritePageTableTableTableManager get favoritePageTable =>
       $$FavoritePageTableTableTableManager(_db, _db.favoritePageTable);
+  $$BookTableTableTableManager get bookTable =>
+      $$BookTableTableTableManager(_db, _db.bookTable);
 }

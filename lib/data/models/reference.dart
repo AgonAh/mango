@@ -13,6 +13,12 @@ abstract class ReferenceManga with _$ReferenceManga {
     required String title,
     required String identifier,
     required String thumbnail,
+    // When [type] is 'pdf' or 'epub', this is a book: [url] points at the file
+    // (downloaded on first read). Absent [type] means a manga (uses chapters).
+    String? type,
+    String? url,
+    String? author,
+    String? series,
     ReferenceProgress? progress,
     @Default(<ReferenceProgress>[]) List<ReferenceProgress> favoritePages,
     @Default(<ReferenceChapter>[]) List<ReferenceChapter> chapters,

@@ -1,7 +1,7 @@
 name: mango
-description: "A minimal, dark-mode, Android-first manga reader."
+description: "A minimal, dark-mode, Android-first manga and book reader."
 publish_to: 'none'
-version: 2.1.0
+version: 3.1.0
 
 environment:
   sdk: ^3.9.2
@@ -34,6 +34,14 @@ dependencies:
 
   # Picking a JSON file to import
   file_picker: ^8.1.0
+
+  # PDF & EPUB books
+  pdfx: ^2.6.0
+  epubx: ^4.0.0
+  image: ^3.3.0  # pinned to 3.x to match epubx's constraint
+  flutter_widget_from_html_core: ^0.16.0
+  scrollable_positioned_list: ^0.3.8
+  html: ^0.15.4
 
   # Models & serialization
   freezed_annotation: ^3.1.0

@@ -1,49 +1,45 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mango/data/db/database.dart';
+import 'package:mango/features/library/library_entry.dart';
 import 'package:mango/features/library/library_sort.dart';
 
-MangaRow _manga(
+LibraryEntry _entry(
   String id, {
   bool favorite = false,
   int? favoriteOrder,
   DateTime? lastReadAt,
 }) {
-  final now = DateTime(2026);
-  return MangaRow(
-    identifier: id,
+  return LibraryEntry(
+    kind: LibraryKind.manga,
     title: id,
-    thumbnail: 't',
     isFavorite: favorite,
     favoriteOrder: favoriteOrder,
-    lastReadChapterId: null,
     lastReadAt: lastReadAt,
-    createdAt: now,
-    updatedAt: now,
+    mangaId: id,
   );
 }
 
 void main() {
   test('favorites come first, ordered by favoriteOrder', () {
     final groups = groupLibrary([
-      _manga('b-fav', favorite: true, favoriteOrder: 1),
-      _manga('a-fav', favorite: true, favoriteOrder: 0),
-      _manga('plain'),
+      _entry('b-fav', favorite: true, favoriteOrder: 1),
+      _entry('a-fav', favorite: true, favoriteOrder: 0),
+      _entry('plain'),
     ]);
 
-    expect(groups.favorites.map((m) => m.identifier), ['a-fav', 'b-fav']);
-    expect(groups.others.map((m) => m.identifier), ['plain']);
+    expect(groups.favorites.map((m) => m.title), ['a-fav', 'b-fav']);
+    expect(groups.others.map((m) => m.title), ['plain']);
   });
 
   test('started series sort above unstarted, by recency', () {
     final groups = groupLibrary([
-      _manga('zeta'), // unstarted, alphabetical last
-      _manga('alpha'), // unstarted
-      _manga('older', lastReadAt: DateTime(2026, 1, 1)),
-      _manga('newer', lastReadAt: DateTime(2026, 6, 1)),
+      _entry('zeta'),
+      _entry('alpha'),
+      _entry('older', lastReadAt: DateTime(2026, 1, 1)),
+      _entry('newer', lastReadAt: DateTime(2026, 6, 1)),
     ]);
 
     expect(
-      groups.others.map((m) => m.identifier),
+      groups.others.map((m) => m.title),
       ['newer', 'older', 'alpha', 'zeta'],
     );
   });
@@ -51,11 +47,11 @@ void main() {
   test('a favorited started series stays in favorites, not the started group',
       () {
     final groups = groupLibrary([
-      _manga('fav', favorite: true, favoriteOrder: 0, lastReadAt: DateTime(2026)),
-      _manga('started', lastReadAt: DateTime(2026)),
+      _entry('fav', favorite: true, favoriteOrder: 0, lastReadAt: DateTime(2026)),
+      _entry('started', lastReadAt: DateTime(2026)),
     ]);
 
-    expect(groups.favorites.map((m) => m.identifier), ['fav']);
-    expect(groups.others.map((m) => m.identifier), ['started']);
+    expect(groups.favorites.map((m) => m.title), ['fav']);
+    expect(groups.others.map((m) => m.title), ['started']);
   });
 }
